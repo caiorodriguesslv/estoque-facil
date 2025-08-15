@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres:13
+    container_name: estoque_facil_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: estoque_facil
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - estoque_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d estoque_facil"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  tomcat:
+    image: tomcat:9-jdk8
+    container_name: estoque_facil_tomcat
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target/estoque-facil.war:/usr/local/tomcat/webapps/estoque-facil.war
+    networks:
+      - estoque_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - JAVA_OPTS=-Djava.security.egd=file:/dev/./urandom -Xmx512m -Xms256m
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: estoque_facil_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@estoquefacil.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "8081:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin-servers.json:/pgadmin4/servers.json
+    networks:
+      - estoque_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  estoque_network:
+    driver: bridge 
