@@ -62,7 +62,12 @@ public class PaymentDAOImpl implements PaymentDAO {
         
         try {
             session = sessionFactory.openSession();
-            return session.createQuery("FROM Payment", Payment.class).list();
+            return session.createQuery(
+                "SELECT p FROM Payment p " +
+                "LEFT JOIN FETCH p.product " +
+                "LEFT JOIN FETCH p.user", 
+                Payment.class
+            ).list();
         } catch (Exception e) {
             throw new DAOException("Erro ao buscar todos os pagamentos", e);
         } finally {
@@ -78,7 +83,12 @@ public class PaymentDAOImpl implements PaymentDAO {
         
         try {
             session = sessionFactory.openSession();
-            return session.createQuery("FROM Payment p WHERE p.user.id = :userId", Payment.class)
+            return session.createQuery(
+                "SELECT p FROM Payment p " +
+                "LEFT JOIN FETCH p.product " +
+                "LEFT JOIN FETCH p.user " +
+                "WHERE p.user.id = :userId", 
+                Payment.class)
                          .setParameter("userId", userId)
                          .list();
         } catch (Exception e) {
@@ -96,7 +106,12 @@ public class PaymentDAOImpl implements PaymentDAO {
         
         try {
             session = sessionFactory.openSession();
-            return session.createQuery("FROM Payment p WHERE p.product.code = :productCode", Payment.class)
+            return session.createQuery(
+                "SELECT p FROM Payment p " +
+                "LEFT JOIN FETCH p.product " +
+                "LEFT JOIN FETCH p.user " +
+                "WHERE p.product.code = :productCode", 
+                Payment.class)
                          .setParameter("productCode", productCode)
                          .list();
         } catch (Exception e) {
@@ -114,7 +129,12 @@ public class PaymentDAOImpl implements PaymentDAO {
         
         try {
             session = sessionFactory.openSession();
-            return session.createQuery("FROM Payment p WHERE p.deliveryDate BETWEEN :startDate AND :endDate", Payment.class)
+            return session.createQuery(
+                "SELECT p FROM Payment p " +
+                "LEFT JOIN FETCH p.product " +
+                "LEFT JOIN FETCH p.user " +
+                "WHERE p.deliveryDate BETWEEN :startDate AND :endDate", 
+                Payment.class)
                          .setParameter("startDate", startDate)
                          .setParameter("endDate", endDate)
                          .list();

@@ -147,15 +147,11 @@
                     </p:column>
                     
                     <p:column headerText="Data de Entrega" sortBy="#{payment.deliveryDate}" width="120">
-                        <h:outputText value="#{payment.deliveryDate}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText>
+                        <h:outputText value="#{payment.deliveryDate.toString()}" />
                     </p:column>
                     
                     <p:column headerText="Data do Pagamento" sortBy="#{payment.paymentDate}" width="120">
-                        <h:outputText value="#{payment.paymentDate}">
-                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                        </h:outputText>
+                        <h:outputText value="#{payment.paymentDate.toString()}" />
                     </p:column>
                     
                     <p:column headerText="Ações" width="100">
