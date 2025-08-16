@@ -1,210 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
 
 <h:head>
     <title>Estoque Fácil - Dashboard</title>
     <style>
-        .dashboard { margin: 20px; }
-        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                  color: white; padding: 30px; border-radius: 10px; text-align: center; }
-        .menu-container { margin: 30px 0; }
-        .menu-card { margin: 10px; }
-        .stats-container { margin: 20px 0; }
-        .stats-card { margin: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .stats-card .ui-panel-titlebar { 
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
-            color: #333; font-weight: 600; 
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
         }
-        .status-badge { 
-            padding: 3px 8px; 
-            border-radius: 3px; 
-            color: white; 
-            font-weight: bold; 
+
+        .layout {
+            display: flex;
+            height: 100vh;
         }
-        .stats-number { 
-            margin: 0; 
-            font-size: 2em; 
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 0 10px 10px 0;
         }
-        .stats-center { 
-            text-align: center; 
+
+        .sidebar h2 {
+            margin-top: 0;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.5em;
         }
-        .error-message { 
-            margin-top: 10px; 
-            padding: 10px; 
-            background-color: #f8d7da; 
-            border: 1px solid #f5c6cb; 
-            border-radius: 5px; 
-            color: #721c24; 
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            color: white !important;
+            margin-bottom: 12px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.3s, transform 0.3s;
         }
-        .status-ok { 
-            background-color: #28a745; 
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
         }
-        .status-warning { 
-            background-color: #ffc107; 
+
+        .nav-link .pi {
+            margin-right: 10px;
+            font-size: 1.2em;
         }
-        .status-error { 
-            background-color: #dc3545; 
-        }
-        .expired-danger { 
-            color: #dc3545; 
-        }
-        .expired-safe { 
-            color: #28a745; 
+
+        /* Conteúdo principal */
+        .content {
+            flex: 1;
+            padding: 40px;
+            background-color: #f4f4f4;
         }
     </style>
 </h:head>
 
 <h:body>
-    <div class="dashboard">
-        <div class="header">
-            <h1>Estoque Fácil</h1>
+    <div class="layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Estoque Fácil</h2>
+
+            <p:link value="Usuários" outcome="users?faces-redirect=true" styleClass="nav-link" icon="pi pi-users" />
+            <p:link value="Produtos" outcome="products?faces-redirect=true" styleClass="nav-link" icon="pi pi-box" />
+            <p:link value="Pagamentos" outcome="payments?faces-redirect=true" styleClass="nav-link"
+                icon="pi pi-money-bill" />
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="content">
+            <h1>Bem-vindo ao Sistema</h1>
             <h2>Sistema de Controle de Estoque</h2>
-            <p>Gerencie seus produtos, usuários e pagamentos de forma simples e eficiente</p>
+            <p>Gerencie seus produtos, usuários e pagamentos de forma simples e eficiente.</p>
         </div>
-        
-        <!-- Menu Principal -->
-        <div class="menu-container">
-            <h:panelGrid columns="3" cellpadding="10">
-                <div class="menu-card">
-                    <p:card styleClass="p-card-hover">
-                        <f:facet name="header">
-                            <h3>👥 Usuários</h3>
-                        </f:facet>
-                        <f:facet name="content">
-                            <p>Gerencie usuários do sistema</p>
-                            <p:commandButton value="Acessar" action="users?faces-redirect=true" 
-                                            icon="pi pi-users" styleClass="p-button-primary" />
-                        </f:facet>
-                    </p:card>
-                </div>
-                
-                <div class="menu-card">
-                    <p:card styleClass="p-card-hover">
-                        <f:facet name="header">
-                            <h3>📦 Produtos</h3>
-                        </f:facet>
-                        <f:facet name="content">
-                            <p>Controle de produtos e estoque</p>
-                            <p:commandButton value="Acessar" action="products?faces-redirect=true" 
-                                            icon="pi pi-box" styleClass="p-button-success" />
-                        </f:facet>
-                    </p:card>
-                </div>
-                
-                <div class="menu-card">
-                    <p:card styleClass="p-card-hover">
-                        <f:facet name="header">
-                            <h3>💰 Pagamentos</h3>
-                        </f:facet>
-                        <f:facet name="content">
-                            <p>Registro de pagamentos e entregas</p>
-                            <p:commandButton value="Acessar" action="payments?faces-redirect=true" 
-                                            icon="pi pi-money-bill" styleClass="p-button-warning" />
-                        </f:facet>
-                    </p:card>
-                </div>
-            </h:panelGrid>
-        </div>
-        
-        <!-- Mensagens de Erro do Sistema -->
-        <h:form id="dashboardForm">
-            <p:messages id="messages" showDetail="true" autoUpdate="true" />
-            
-            <!-- Alerta de erro se sistema não estiver inicializado -->
-            <p:outputPanel rendered="#{!dashboardBean.initialized}">
-                <p:card styleClass="p-card-danger">
-                    <f:facet name="header">
-                        <h4>⚠️ Sistema Indisponível</h4>
-                    </f:facet>
-                    <f:facet name="content">
-                        <p>O sistema está temporariamente indisponível. Verifique a conexão com o banco de dados.</p>
-                        <p:commandButton value="🔄 Tentar Novamente" 
-                                        action="#{dashboardBean.retryInitialization}" 
-                                        update="@form" 
-                                        icon="pi pi-refresh" 
-                                        styleClass="p-button-danger" />
-                    </f:facet>
-                </p:card>
-            </p:outputPanel>
-            
-            <!-- Estatísticas Rápidas -->
-            <div class="stats-container">
-                <h:panelGrid columns="3" cellpadding="10">
-                    <!-- Card de Usuários -->
-                    <p:card styleClass="stats-card">
-                        <f:facet name="header">
-                            <h4>👥 Usuários</h4>
-                        </f:facet>
-                        <f:facet name="content">
-                            <div style="text-align: center;">
-                                <h2 style="color: #667eea; margin: 0;"><h:outputText value="#{dashboardBean.totalUsers}" /></h2>
-                                <p style="margin: 5px 0;">Total de usuários cadastrados</p>
-                            </div>
-                        </f:facet>
-                    </p:card>
-                    
-                    <!-- Card de Produtos -->
-                    <p:card styleClass="stats-card">
-                        <f:facet name="header">
-                            <h4>📦 Produtos</h4>
-                        </f:facet>
-                        <f:facet name="content">
-                            <div style="text-align: center;">
-                                <h2 style="color: #28a745; margin: 0;"><h:outputText value="#{dashboardBean.totalProducts}" /></h2>
-                                <p style="margin: 5px 0;">Total de produtos em estoque</p>
-                            </div>
-                        </f:facet>
-                    </p:card>
-                    
-                    <!-- Card de Produtos Vencidos -->
-                    <p:card styleClass="stats-card">
-                        <f:facet name="header">
-                            <h4>⚠️ Produtos Vencidos</h4>
-                        </f:facet>
-                        <f:facet name="content">
-                            <div class="stats-center">
-                                <h2 class="stats-number #{dashboardBean.expiredProductsClass}">
-                                    <h:outputText value="#{dashboardBean.expiredProducts}" />
-                                </h2>
-                                <p style="margin: 5px 0;">
-                                    <h:outputText value="#{dashboardBean.expiredProductsStatus}" 
-                                                  styleClass="status-badge #{dashboardBean.expiredProductsBadgeClass}" />
-                                </p>
-                            </div>
-                        </f:facet>
-                    </p:card>
-                </h:panelGrid>
-                
-                <!-- Botão para atualizar estatísticas e status do sistema -->
-                <div style="text-align: center; margin-top: 20px;">
-                    <p:commandButton value="🔄 Atualizar Estatísticas" 
-                                    action="#{dashboardBean.refreshStatistics}" 
-                                    update="@form" 
-                                    icon="pi pi-refresh" 
-                                    styleClass="p-button-secondary"
-                                    disabled="#{!dashboardBean.initialized}" />
-                    
-                    <!-- Status do Sistema -->
-                    <div style="margin-top: 15px;">
-                        <h:outputText value="Status do Sistema: " />
-                        <h:outputText value="#{dashboardBean.systemStatus}" 
-                                      styleClass="status-badge #{dashboardBean.systemStatusClass}" />
-                    </div>
-                    
-                    <!-- Mensagem de erro detalhada -->
-                    <p:outputPanel rendered="#{dashboardBean.errorMessage != null and dashboardBean.errorMessage != ''}">
-                        <div class="error-message">
-                            <h:outputText value="#{dashboardBean.errorMessage}" />
-                        </div>
-                    </p:outputPanel>
-                </div>
-            </div>
-        </h:form>
     </div>
 </h:body>
+
 </html>

@@ -1,7 +1,7 @@
 package org.devilish.bean;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -11,54 +11,64 @@ import org.devilish.impl.UserDAOImpl;
 import org.devilish.impl.ProductDAOImpl;
 import org.devilish.exceptions.DAOException;
 import java.util.List;
+import java.io.Serializable;
 import org.devilish.entity.User;
 import org.devilish.entity.Product;
 
 @ManagedBean
-@SessionScoped
-public class DashboardBean {
+@ViewScoped
+public class DashboardBean implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     
-    private UserDAO userDAO;
-    private ProductDAO productDAO;
+    private transient UserDAO userDAO;
+    private transient ProductDAO productDAO;
     
     private int totalUsers = 0;
     private int totalProducts = 0;
     private int expiredProducts = 0;
     private boolean initialized = false;
+    private boolean dataLoaded = false;
     private String errorMessage;
     
     @PostConstruct
     public void init() {
-        System.out.println("=== INICIALIZANDO DASHBOARD BEAN ===");
+        // Apenas inicializa os DAOs, não carrega dados
         try {
             initializeDAOs();
-            
-       
-            if (initialized) {
-                loadStatistics();
-                System.out.println("=== DASHBOARD BEAN INICIALIZADO COM SUCESSO ===");
-                System.out.println("=== TOTAL USUARIOS: " + totalUsers + " ===");
-                System.out.println("=== TOTAL PRODUTOS: " + totalProducts + " ===");
-            }
         } catch (Exception e) {
-            System.err.println("=== ERRO AO INICIALIZAR DASHBOARD BEAN ===");
-            e.printStackTrace();
             handleInitializationError(e);
+        }
+    }
+    
+    /**
+     * Método lazy para carregar dados apenas quando necessário
+     * É chamado automaticamente pelos getters quando os dados são acessados
+     */
+    private void loadDataIfNeeded() {
+        if (!initialized) {
+            return;
+        }
+        
+        if (!dataLoaded) {
+            try {
+                loadStatistics();
+                dataLoaded = true;
+            } catch (Exception e) {
+                handleStatisticsError(e);
+            }
         }
     }
     
     private void initializeDAOs() {
         try {
-            System.out.println("=== INICIALIZANDO DAOs ===");
             userDAO = new UserDAOImpl();
             productDAO = new ProductDAOImpl();
             initialized = true;
             errorMessage = null;
-            System.out.println("=== DAOs INICIALIZADOS COM SUCESSO ===");
         } catch (Exception e) {
             initialized = false;
             errorMessage = "Erro ao conectar com o banco de dados: " + e.getMessage();
-            System.err.println("=== ERRO AO INICIALIZAR DAOs ===");
             throw e;
         }
     }
@@ -70,7 +80,6 @@ public class DashboardBean {
         expiredProducts = 0;
         errorMessage = "Sistema temporariamente indisponível. Tente novamente.";
         
-        // Adicionar mensagem para o usuário se o contexto JSF estiver disponível
         if (FacesContext.getCurrentInstance() != null) {
             addMessage("Erro ao carregar dados do sistema: " + e.getMessage(), 
                       FacesMessage.SEVERITY_ERROR);
@@ -79,36 +88,24 @@ public class DashboardBean {
     
     private void loadStatistics() {
         if (!initialized) {
-            System.out.println("=== DAOs NÃO INICIALIZADOS - PULANDO CARREGAMENTO ===");
             return;
         }
         
         try {
-            // Carregar total de usuários com verificação de nulo
             List<User> users = userDAO.findAll();
             totalUsers = (users != null) ? users.size() : 0;
-            System.out.println("=== TOTAL DE USUÁRIOS: " + totalUsers + " ===");
-            
             
             List<Product> products = productDAO.findAll();
             totalProducts = (products != null) ? products.size() : 0;
-            System.out.println("=== TOTAL DE PRODUTOS: " + totalProducts + " ===");
-            
             
             List<Product> expired = productDAO.findExpiredProducts();
             expiredProducts = (expired != null) ? expired.size() : 0;
-            System.out.println("=== PRODUTOS VENCIDOS: " + expiredProducts + " ===");
-            
             
             errorMessage = null;
             
         } catch (DAOException e) {
-            System.err.println("=== ERRO AO CARREGAR ESTATÍSTICAS ===");
-            e.printStackTrace();
             handleStatisticsError(e);
         } catch (Exception e) {
-            System.err.println("=== ERRO INESPERADO AO CARREGAR ESTATÍSTICAS ===");
-            e.printStackTrace();
             handleStatisticsError(e);
         }
     }
@@ -120,36 +117,36 @@ public class DashboardBean {
         
         errorMessage = "Erro ao carregar estatísticas: " + e.getMessage();
         
-       
         if (FacesContext.getCurrentInstance() != null) {
             addMessage("Erro ao atualizar estatísticas. Dados podem estar desatualizados.", 
                       FacesMessage.SEVERITY_WARN);
         }
     }
     
-    
+    /**
+     * Força o recarregamento dos dados
+     */
     public void refreshStatistics() {
         try {
             if (!initialized) {
                 initializeDAOs();
             }
+            dataLoaded = false; // Força recarregamento
             loadStatistics();
+            dataLoaded = true;
             addMessage("Estatísticas atualizadas com sucesso!", FacesMessage.SEVERITY_INFO);
         } catch (Exception e) {
-            System.err.println("=== ERRO AO ATUALIZAR ESTATÍSTICAS ===");
-            e.printStackTrace();
             addMessage("Erro ao atualizar estatísticas: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
     
-    
     public void retryInitialization() {
         init();
         if (initialized) {
+            dataLoaded = false; // Reseta flag para forçar carregamento
             addMessage("Sistema reinicializado com sucesso!", FacesMessage.SEVERITY_INFO);
         }
     }
-    
     
     private void addMessage(String message, FacesMessage.Severity severity) {
         if (FacesContext.getCurrentInstance() != null) {
@@ -158,49 +155,49 @@ public class DashboardBean {
         }
     }
     
-    
+    // Getters com inicialização lazy
     public int getTotalUsers() {
+        loadDataIfNeeded();
         return totalUsers;
     }
     
     public int getTotalProducts() {
+        loadDataIfNeeded();
         return totalProducts;
     }
     
     public int getExpiredProducts() {
+        loadDataIfNeeded();
         return expiredProducts;
     }
     
-    // Getter para status dos produtos (para exibição visual)
     public String getProductStatus() {
+        loadDataIfNeeded();
         if (expiredProducts > 0) {
             return "warning";
         }
         return "success";
     }
     
-
-    
-    // Getter para verificar se o sistema está inicializado
     public boolean isInitialized() {
         return initialized;
     }
     
-   
+    public boolean isDataLoaded() {
+        return dataLoaded;
+    }
+    
     public String getErrorMessage() {
         return errorMessage;
     }
-    
     
     public boolean getHasError() {
         return errorMessage != null && !errorMessage.trim().isEmpty();
     }
     
-    // Método alternativo para compatibilidade com JSF
     public boolean isHasError() {
         return getHasError();
     }
-    
     
     public String getSystemStatus() {
         if (!initialized) {
@@ -212,7 +209,6 @@ public class DashboardBean {
         }
     }
     
-    // Getter para classe CSS do status do sistema
     public String getSystemStatusClass() {
         String status = getSystemStatus();
         switch (status) {
@@ -227,18 +223,35 @@ public class DashboardBean {
         }
     }
     
-    // Getter para classe CSS dos produtos vencidos
     public String getExpiredProductsClass() {
+        loadDataIfNeeded();
         return expiredProducts > 0 ? "expired-danger" : "expired-safe";
     }
     
-    // Getter para classe CSS do badge de produtos vencidos
     public String getExpiredProductsBadgeClass() {
+        loadDataIfNeeded();
         return expiredProducts > 0 ? "status-error" : "status-ok";
     }
     
-    // Getter para texto de status dos produtos vencidos
     public String getExpiredProductsStatus() {
+        loadDataIfNeeded();
         return expiredProducts > 0 ? "ATENÇÃO" : "OK";
+    }
+    
+    // Métodos de navegação para as rotas
+    public String goToUsers() {
+        return "users?faces-redirect=true";
+    }
+    
+    public String goToProducts() {
+        return "products?faces-redirect=true";
+    }
+    
+    public String goToPayments() {
+        return "payments?faces-redirect=true";
+    }
+    
+    public String goToDashboard() {
+        return "index?faces-redirect=true";
     }
 }
