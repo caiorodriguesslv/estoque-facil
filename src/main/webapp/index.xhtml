@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Estoque Fácil - Dashboard</title>
+    <style>
+        .dashboard { margin: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                  color: white; padding: 30px; border-radius: 10px; text-align: center; }
+        .menu-container { margin: 30px 0; }
+        .menu-card { margin: 10px; }
+        .stats-container { margin: 20px 0; }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>Estoque Fácil</h1>
+            <h2>Sistema de Controle de Estoque</h2>
+            <p>Gerencie seus produtos, usuários e pagamentos de forma simples e eficiente</p>
+        </div>
+        
+        <!-- Menu Principal -->
+        <div class="menu-container">
+            <h:panelGrid columns="3" cellpadding="10">
+                <div class="menu-card">
+                    <p:card styleClass="p-card-hover">
+                        <f:facet name="header">
+                            <h3>👥 Usuários</h3>
+                        </f:facet>
+                        <f:facet name="content">
+                            <p>Gerencie usuários do sistema</p>
+                            <p:commandButton value="Acessar" action="usuarios?faces-redirect=true" 
+                                            icon="pi pi-users" styleClass="p-button-primary" />
+                        </f:facet>
+                    </p:card>
+                </div>
+                
+                <div class="menu-card">
+                    <p:card styleClass="p-card-hover">
+                        <f:facet name="header">
+                            <h3>📦 Produtos</h3>
+                        </f:facet>
+                        <f:facet name="content">
+                            <p>Controle de produtos e estoque</p>
+                            <p:commandButton value="Acessar" action="produtos?faces-redirect=true" 
+                                            icon="pi pi-box" styleClass="p-button-success" />
+                        </f:facet>
+                    </p:card>
+                </div>
+                
+                <div class="menu-card">
+                    <p:card styleClass="p-card-hover">
+                        <f:facet name="header">
+                            <h3>💰 Pagamentos</h3>
+                        </f:facet>
+                        <f:facet name="content">
+                            <p>Registro de pagamentos e entregas</p>
+                            <p:commandButton value="Acessar" action="pagamentos?faces-redirect=true" 
+                                            icon="pi pi-money-bill" styleClass="p-button-warning" />
+                        </f:facet>
+                    </p:card>
+                </div>
+            </h:panelGrid>
+        </div>
+        
+        <!-- Estatísticas Rápidas -->
+        <div class="stats-container">
+            <h:panelGrid columns="3" cellpadding="10">
+                <p:card>
+                    <f:facet name="header">
+                        <h4>Estatísticas</h4>
+                    </f:facet>
+                    <f:facet name="content">
+                        <p>Total de Usuários: <strong>#{dashboardBean.totalUsers}</strong></p>
+                        <p>Total de Produtos: <strong>#{dashboardBean.totalProducts}</strong></p>
+                        <p>Produtos Vencidos: <strong>#{dashboardBean.expiredProducts}</strong></p>
+                    </f:facet>
+                </p:card>
+            </h:panelGrid>
+        </div>
+    </div>
+</h:body>
+</html>

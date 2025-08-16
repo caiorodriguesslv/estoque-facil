@@ -172,7 +172,23 @@ public class PaymentBean {
             new FacesMessage(severity, message, message));
     }
     
-    // Getters e Setters
+    public void clear() {
+        payment = new Payment();
+        selectedUserId = null;
+        selectedProductCode = null;
+        startDate = null;
+        endDate = null;
+    }
+    
+    public void cancel() {
+        payment = new Payment();
+        selectedUserId = null;
+        selectedProductCode = null;
+        startDate = null;
+        endDate = null;
+    }
+    
+    
     public Payment getPayment() { return payment; }
     public void setPayment(Payment payment) { this.payment = payment; }
     public List<Payment> getPayments() { return payments; }

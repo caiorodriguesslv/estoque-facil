@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>Gestão de Pagamentos - Estoque Fácil</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+
+<h:body>
+    <div class="header">
+        <h1>Gestão de Pagamentos</h1>
+        <p>Sistema de Controle de Estoque</p>
+    </div>
+
+    <h:form id="paymentForm">
+        <!-- Mensagens de Feedback -->
+        <p:messages id="messages" showDetail="true" autoUpdate="true" />
+        
+        <!-- Formulário de Cadastro -->
+        <div class="form-container">
+            <p:panel header="Registro de Pagamento" toggleable="true" collapsed="false">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="selectedProduct" value="Produto:" />
+                    <p:selectOneMenu id="selectedProduct" value="#{paymentBean.selectedProductCode}" 
+                                    required="true" requiredMessage="Produto é obrigatório">
+                        <f:selectItem itemLabel="Selecione um produto..." itemValue="" />
+                        <f:selectItems value="#{paymentBean.availableProducts}" 
+                                      var="product" itemLabel="#{product.code} - #{product.description}" 
+                                      itemValue="#{product.code}" />
+                    </p:selectOneMenu>
+                    
+                    <h:outputLabel for="selectedUser" value="Usuário:" />
+                    <p:selectOneMenu id="selectedUser" value="#{paymentBean.selectedUserId}" 
+                                    required="true" requiredMessage="Usuário é obrigatório">
+                        <f:selectItem itemLabel="Selecione um usuário..." itemValue="" />
+                        <f:selectItems value="#{paymentBean.availableUsers}" 
+                                      var="user" itemLabel="#{user.name} (#{user.email})" 
+                                      itemValue="#{user.id}" />
+                    </p:selectOneMenu>
+                    
+                    <h:outputLabel for="paidQuantity" value="Quantidade Paga:" />
+                    <p:inputNumber id="paidQuantity" value="#{paymentBean.payment.paidQuantity}" 
+                                  required="true" requiredMessage="Quantidade é obrigatória"
+                                  minValue="0.01" decimalPlaces="2" symbol="un">
+                        <f:validateDoubleRange minimum="0.01" maximum="999999.99" />
+                    </p:inputNumber>
+                    
+                    <h:outputLabel for="deliveryDate" value="Data de Entrega:" />
+                    <p:calendar id="deliveryDate" value="#{paymentBean.payment.deliveryDate}" 
+                               required="true" requiredMessage="Data de entrega é obrigatória"
+                               pattern="dd/MM/yyyy" showTime="false" />
+                </h:panelGrid>
+                
+                <p:separator />
+                
+                <h:panelGroup>
+                    <p:commandButton value="💰 Registrar Pagamento" action="#{paymentBean.save}" 
+                                    update="@form" icon="pi pi-save" 
+                                    styleClass="p-button-success" />
+                    <p:commandButton value="Limpar" action="#{paymentBean.clear}" 
+                                    update="@form" icon="pi pi-refresh" 
+                                    styleClass="p-button-secondary" />
+                    <p:commandButton value="❌ Cancelar" action="#{paymentBean.cancel}" 
+                                    update="@form" icon="pi pi-times" 
+                                    styleClass="p-button-danger" />
+                </h:panelGroup>
+            </p:panel>
+        </div>
+        
+        <!-- Área de Busca -->
+        <div class="search-container">
+            <p:panel header="🔍 Buscar Pagamentos">
+                <h:panelGrid columns="6" cellpadding="5">
+                    <h:outputLabel for="searchUser" value="Buscar por Usuário:" />
+                    <p:selectOneMenu id="searchUser" value="#{paymentBean.selectedUserId}">
+                        <f:selectItem itemLabel="Todos os usuários..." itemValue="" />
+                        <f:selectItems value="#{paymentBean.availableUsers}" 
+                                      var="user" itemLabel="#{user.name}" 
+                                      itemValue="#{user.id}" />
+                    </p:selectOneMenu>
+                    
+                    <h:outputLabel for="searchProduct" value="Buscar por Produto:" />
+                    <p:selectOneMenu id="searchProduct" value="#{paymentBean.selectedProductCode}">
+                        <f:selectItem itemLabel="Todos os produtos..." itemValue="" />
+                        <f:selectItems value="#{paymentBean.availableProducts}" 
+                                      var="product" itemLabel="#{product.code}" 
+                                      itemValue="#{product.code}" />
+                    </p:selectOneMenu>
+                    
+                    <p:commandButton value="Buscar por Usuário" action="#{paymentBean.searchByUser}" 
+                                    update="@form" icon="pi pi-user" />
+                    <p:commandButton value="Buscar por Produto" action="#{paymentBean.searchByProduct}" 
+                                    update="@form" icon="pi pi-box" />
+                </h:panelGrid>
+                
+                <p:separator />
+                
+                <h:panelGrid columns="4" cellpadding="5">
+                    <h:outputLabel for="startDate" value="Data Inicial:" />
+                    <p:calendar id="startDate" value="#{paymentBean.startDate}" 
+                               pattern="dd/MM/yyyy" showTime="false" />
+                    
+                    <h:outputLabel for="endDate" value="Data Final:" />
+                    <p:calendar id="endDate" value="#{paymentBean.endDate}" 
+                               pattern="dd/MM/yyyy" showTime="false" />
+                    
+                    <p:commandButton value="Buscar por Período" action="#{paymentBean.searchByDateRange}" 
+                                    update="@form" icon="pi pi-calendar" />
+                </h:panelGrid>
+            </p:panel>
+        </div>
+        
+        <!-- Tabela de Pagamentos -->
+        <div class="table-container">
+            <p:panel header="📋 Lista de Pagamentos">
+                <p:dataTable id="paymentsTable" value="#{paymentBean.payments}" var="payment" 
+                            paginator="true" rows="10" 
+                            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="5,10,20,50"
+                            emptyMessage="Nenhum pagamento encontrado"
+                            styleClass="p-datatable-sm">
+                    
+                    <p:column headerText="ID" width="60">
+                        <h:outputText value="#{payment.id}" />
+                    </p:column>
+                    
+                    <p:column headerText="Produto" width="120">
+                        <h:outputText value="#{payment.product.code}" />
+                    </p:column>
+                    
+                    <p:column headerText="Descrição do Produto" width="200">
+                        <h:outputText value="#{payment.product.description}" />
+                    </p:column>
+                    
+                    <p:column headerText="Quantidade" width="100">
+                        <h:outputText value="#{payment.paidQuantity}" />
+                    </p:column>
+                    
+                    <p:column headerText="Usuário" width="150">
+                        <h:outputText value="#{payment.user.name}" />
+                    </p:column>
+                    
+                    <p:column headerText="Data de Entrega" sortBy="#{payment.deliveryDate}" width="120">
+                        <h:outputText value="#{payment.deliveryDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Data do Pagamento" sortBy="#{payment.paymentDate}" width="120">
+                        <h:outputText value="#{payment.paymentDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Ações" width="100">
+                        <h:panelGroup>
+                            <p:commandButton value="🗑️" action="#{paymentBean.delete(payment.id)}" 
+                                            update="@form" icon="pi pi-trash" 
+                                            styleClass="p-button-sm p-button-danger" 
+                                            title="Excluir"
+                                            onclick="return confirm('Tem certeza que deseja excluir este pagamento?')" />
+                        </h:panelGroup>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </div>
+    </h:form>
+</h:body>
+</html>

@@ -91,7 +91,17 @@ public class UserBean {
             new FacesMessage(severity, message, message));
     }
     
-    // Getters e Setters
+    public void clear() {
+        user = new User();
+        searchEmail = null;
+    }
+    
+    public void cancel() {
+        user = new User();
+        searchEmail = null;
+    }
+    
+    
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
     public List<User> getUsers() { return users; }

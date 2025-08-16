@@ -26,6 +26,7 @@ public class ProductBean {
     private List<Product> expiredProducts;
     private String searchCode;
     private LocalDate searchExpiryDate;
+    private boolean editMode = false;
     
     @PostConstruct
     public void init() {
@@ -42,14 +43,21 @@ public class ProductBean {
                 return;
             }
             
-            if (productDAO.existsByCode(product.getCode())) {
+            if (!editMode && productDAO.existsByCode(product.getCode())) {
                 addMessage("Produto com este código já existe!", FacesMessage.SEVERITY_ERROR);
                 return;
             }
             
-            productDAO.save(product);
-            addMessage("Produto salvo com sucesso!", FacesMessage.SEVERITY_INFO);
+            if (editMode) {
+                productDAO.update(product);
+                addMessage("Produto atualizado com sucesso!", FacesMessage.SEVERITY_INFO);
+            } else {
+                productDAO.save(product);
+                addMessage("Produto salvo com sucesso!", FacesMessage.SEVERITY_INFO);
+            }
+            
             product = new Product();
+            editMode = false;
             loadProducts();
             loadExpiredProducts();
         } catch (BusinessException e) {
@@ -59,19 +67,7 @@ public class ProductBean {
         }
     }
     
-    public void update() {
-        try {
-            productDAO.update(product);
-            addMessage("Produto atualizado com sucesso!", FacesMessage.SEVERITY_INFO);
-            product = new Product();
-            loadProducts();
-            loadExpiredProducts();
-        } catch (BusinessException e) {
-            addMessage(e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        } catch (DAOException e) {
-            addMessage("Erro ao atualizar produto: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        }
-    }
+
     
     public void delete(String code) {
         try {
@@ -82,10 +78,6 @@ public class ProductBean {
         } catch (DAOException e) {
             addMessage("Erro ao remover produto: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
-    }
-    
-    public void edit(Product product) {
-        this.product = product;
     }
     
     public void searchByCode() {
@@ -151,6 +143,25 @@ public class ProductBean {
             new FacesMessage(severity, message, message));
     }
     
+    public void clear() {
+        product = new Product();
+        searchCode = null;
+        searchExpiryDate = null;
+        editMode = false;
+    }
+    
+    public void cancel() {
+        product = new Product();
+        searchCode = null;
+        searchExpiryDate = null;
+        editMode = false;
+    }
+    
+    public void edit(Product product) {
+        this.product = product;
+        this.editMode = true;
+    }
+    
    
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
@@ -161,5 +172,7 @@ public class ProductBean {
     public void setSearchCode(String searchCode) { this.searchCode = searchCode; }
     public LocalDate getSearchExpiryDate() { return searchExpiryDate; }
     public void setSearchExpiryDate(LocalDate searchExpiryDate) { this.searchExpiryDate = searchExpiryDate; }
+    public boolean isEditMode() { return editMode; }
+    public void setEditMode(boolean editMode) { this.editMode = editMode; }
 }
 

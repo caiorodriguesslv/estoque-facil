@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>Gestão de Usuários - Estoque Fácil</title>
+    <style>
+        .form-container { margin: 20px; }
+        .search-container { margin: 20px 0; }
+        .table-container { margin: 20px 0; }
+        .header { background: #f8f9fa; padding: 15px; border-radius: 5px; }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="header">
+        <h1>Gestão de Usuários</h1>
+        <p>Sistema de Controle de Estoque</p>
+    </div>
+
+    <h:form id="usuarioForm">
+        <!-- Mensagens de Feedback -->
+        <p:messages id="messages" showDetail="true" autoUpdate="true" />
+        
+        <!-- Formulário de Cadastro/Edição -->
+        <div class="form-container">
+            <p:panel header="Cadastro de Usuário" toggleable="true" collapsed="false">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="nome" value="Nome Completo:" />
+                    <p:inputText id="nome" value="#{usuarioBean.user.name}" 
+                                required="true" requiredMessage="Nome é obrigatório"
+                                size="40" maxlength="100">
+                        <f:validateLength minimum="3" maximum="100" />
+                    </p:inputText>
+                    
+                    <h:outputLabel for="email" value="E-mail:" />
+                    <p:inputText id="email" value="#{usuarioBean.user.email}" 
+                                required="true" requiredMessage="E-mail é obrigatório"
+                                size="40" maxlength="100">
+                        <f:validateRegex pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" />
+                    </p:inputText>
+                </h:panelGrid>
+                
+                <p:separator />
+                
+                <h:panelGroup>
+                    <p:commandButton value="Salvar" action="#{usuarioBean.save}" 
+                                    update="@form" icon="pi pi-save" 
+                                    styleClass="p-button-success" />
+                    <p:commandButton value="Limpar" action="#{usuarioBean.clear}" 
+                                    update="@form" icon="pi pi-refresh" 
+                                    styleClass="p-button-secondary" />
+                    <p:commandButton value="❌ Cancelar" action="#{usuarioBean.cancel}" 
+                                    update="@form" icon="pi pi-times" 
+                                    styleClass="p-button-danger" />
+                </h:panelGroup>
+            </p:panel>
+        </div>
+        
+        <!-- Área de Busca -->
+        <div class="search-container">
+            <p:panel header="🔍 Buscar Usuário">
+                <h:panelGrid columns="3" cellpadding="5">
+                    <h:outputLabel for="searchEmail" value="Buscar por E-mail:" />
+                    <p:inputText id="searchEmail" value="#{usuarioBean.searchEmail}" 
+                                placeholder="Digite o e-mail..." size="30" />
+                    <p:commandButton value="Buscar" action="#{usuarioBean.search}" 
+                                    update="@form" icon="pi pi-search" />
+                </h:panelGrid>
+            </p:panel>
+        </div>
+        
+        <!-- Tabela de Usuários -->
+        <div class="table-container">
+            <p:panel header="👥 Lista de Usuários">
+                <p:dataTable id="usuariosTable" value="#{usuarioBean.users}" var="user" 
+                            paginator="true" rows="10" 
+                            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="5,10,20,50"
+                            emptyMessage="Nenhum usuário encontrado"
+                            styleClass="p-datatable-sm">
+                    
+                    <p:column headerText="ID" width="60">
+                        <h:outputText value="#{user.id}" />
+                    </p:column>
+                    
+                    <p:column headerText="Nome" sortBy="#{user.name}" filterBy="#{user.name}" 
+                              filterMatchMode="contains" width="200">
+                        <h:outputText value="#{user.name}" />
+                    </p:column>
+                    
+                    <p:column headerText="E-mail" sortBy="#{user.email}" filterBy="#{user.email}" 
+                              filterMatchMode="contains" width="250">
+                        <h:outputText value="#{user.email}" />
+                    </p:column>
+                    
+                    <p:column headerText="Ações" width="150">
+                        <h:panelGroup>
+                            <p:commandButton value="✏️" action="#{usuarioBean.edit(user)}" 
+                                            update="@form" icon="pi pi-pencil" 
+                                            styleClass="p-button-sm p-button-info" 
+                                            title="Editar" />
+                            <p:commandButton value="🗑️" action="#{usuarioBean.delete(user.id)}" 
+                                            update="@form" icon="pi pi-trash" 
+                                            styleClass="p-button-sm p-button-danger" 
+                                            title="Excluir"
+                                            onclick="return confirm('Tem certeza que deseja excluir este usuário?')" />
+                        </h:panelGroup>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </div>
+    </h:form>
+</h:body>
+</html>

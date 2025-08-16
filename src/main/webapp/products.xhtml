@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>Gestão de Produtos - Estoque Fácil</title>
+    <style>
+        .form-container { margin: 20px; }
+        .search-container { margin: 20px 0; }
+        .table-container { margin: 20px 0; }
+        .header { background: #f8f9fa; padding: 15px; border-radius: 5px; }
+        .expired { color: red; font-weight: bold; }
+        .warning { color: orange; font-weight: bold; }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="header">
+        <h1>Gestão de Produtos</h1>
+        <p>Sistema de Controle de Estoque</p>
+    </div>
+
+    <h:form id="produtoForm">
+        <!-- Mensagens de Feedback -->
+        <p:messages id="messages" showDetail="true" autoUpdate="true" />
+        
+        <!-- Formulário de Cadastro/Edição -->
+        <div class="form-container">
+            <p:panel header="Cadastro de Produto" toggleable="true" collapsed="false">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="codigo" value="Código do Produto:" />
+                    <p:inputText id="codigo" value="#{produtoBean.product.code}" 
+                                required="true" requiredMessage="Código é obrigatório"
+                                size="20" maxlength="50" disabled="#{produtoBean.editMode}">
+                        <f:validateLength minimum="1" maximum="50" />
+                    </p:inputText>
+                    
+                    <h:outputLabel for="descricao" value="Descrição:" />
+                    <p:inputText id="descricao" value="#{produtoBean.product.description}" 
+                                required="true" requiredMessage="Descrição é obrigatória"
+                                size="50" maxlength="200">
+                        <f:validateLength minimum="3" maximum="200" />
+                    </p:inputText>
+                    
+                    <h:outputLabel for="quantidade" value="Quantidade:" />
+                    <p:inputNumber id="quantidade" value="#{produtoBean.product.quantity}" 
+                                  required="true" requiredMessage="Quantidade é obrigatória"
+                                  minValue="0" decimalPlaces="2" symbol="un">
+                        <f:validateDoubleRange minimum="0" maximum="999999.99" />
+                    </p:inputNumber>
+                    
+                    <h:outputLabel for="dataEntrada" value="Data de Entrada:" />
+                    <p:calendar id="dataEntrada" value="#{produtoBean.product.entryDate}" 
+                               required="true" requiredMessage="Data de entrada é obrigatória"
+                               pattern="dd/MM/yyyy" showTime="false" />
+                    
+                    <h:outputLabel for="dataValidade" value="Data de Validade:" />
+                    <p:calendar id="dataValidade" value="#{produtoBean.product.expiryDate}" 
+                               required="true" requiredMessage="Data de validade é obrigatória"
+                               pattern="dd/MM/yyyy" showTime="false" />
+                </h:panelGrid>
+                
+                <p:separator />
+                
+                <h:panelGroup>
+                    <p:commandButton value="Salvar" action="#{produtoBean.save}" 
+                                    update="@form" icon="pi pi-save" 
+                                    styleClass="p-button-success" />
+                    <p:commandButton value="Limpar" action="#{produtoBean.clear}" 
+                                    update="@form" icon="pi pi-refresh" 
+                                    styleClass="p-button-secondary" />
+                    <p:commandButton value="❌ Cancelar" action="#{produtoBean.cancel}" 
+                                    update="@form" icon="pi pi-times" 
+                                    styleClass="p-button-danger" />
+                </h:panelGroup>
+            </p:panel>
+        </div>
+        
+        <!-- Área de Busca -->
+        <div class="search-container">
+            <p:panel header="�� Buscar Produtos">
+                <h:panelGrid columns="4" cellpadding="5">
+                    <h:outputLabel for="searchCode" value="Buscar por Código:" />
+                    <p:inputText id="searchCode" value="#{produtoBean.searchCode}" 
+                                placeholder="Digite o código..." size="20" />
+                    
+                    <h:outputLabel for="searchExpiryDate" value="Buscar por Validade:" />
+                    <p:calendar id="searchExpiryDate" value="#{produtoBean.searchExpiryDate}" 
+                               pattern="dd/MM/yyyy" showTime="false" />
+                    
+                    <p:commandButton value="Buscar" action="#{produtoBean.searchByCode}" 
+                                    update="@form" icon="pi pi-search" />
+                    <p:commandButton value="Buscar por Data" action="#{produtoBean.searchByExpiryDate}" 
+                                    update="@form" icon="pi pi-calendar" />
+                </h:panelGrid>
+            </p:panel>
+        </div>
+        
+        <!-- Tabela de Produtos -->
+        <div class="table-container">
+            <p:panel header="📋 Lista de Produtos">
+                <p:dataTable id="produtosTable" value="#{produtoBean.products}" var="product" 
+                            paginator="true" rows="10" 
+                            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="5,10,20,50"
+                            emptyMessage="Nenhum produto encontrado"
+                            styleClass="p-datatable-sm">
+                    
+                    <p:column headerText="Código" sortBy="#{product.code}" filterBy="#{product.code}" 
+                              filterMatchMode="contains" width="100">
+                        <h:outputText value="#{product.code}" />
+                    </p:column>
+                    
+                    <p:column headerText="Descrição" sortBy="#{product.description}" 
+                              filterBy="#{product.description}" filterMatchMode="contains" width="200">
+                        <h:outputText value="#{product.description}" />
+                    </p:column>
+                    
+                    <p:column headerText="Quantidade" sortBy="#{product.quantity}" width="100">
+                        <h:outputText value="#{product.quantity}" />
+                    </p:column>
+                    
+                    <p:column headerText="Entrada" sortBy="#{product.entryDate}" width="100">
+                        <h:outputText value="#{product.entryDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Validade" sortBy="#{product.expiryDate}" width="100">
+                        <h:outputText value="#{product.expiryDate}" styleClass="#{product.expired ? 'expired' : (product.warning ? 'warning' : '')}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Status" width="80">
+                        <p:outputPanel rendered="#{product.expired}">
+                            <p:badge value="VENCIDO" severity="danger" />
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{product.warning}">
+                            <p:badge value="ATENÇÃO" severity="warn" />
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{!product.expired and !product.warning}">
+                            <p:badge value="OK" severity="success" />
+                        </p:outputPanel>
+                    </p:column>
+                    
+                    <p:column headerText="Ações" width="150">
+                        <h:panelGroup>
+                            <p:commandButton value="✏️" action="#{produtoBean.edit(product)}" 
+                                            update="@form" icon="pi pi-pencil" 
+                                            styleClass="p-button-sm p-button-info" 
+                                            title="Editar" />
+                            <p:commandButton value="🗑️" action="#{produtoBean.delete(product.code)}" 
+                                            update="@form" icon="pi pi-trash" 
+                                            styleClass="p-button-sm p-button-danger" 
+                                            title="Excluir"
+                                            onclick="return confirm('Tem certeza que deseja excluir este produto?')" />
+                        </h:panelGroup>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </div>
+        
+        <!-- Produtos Vencidos -->
+        <div class="table-container">
+            <p:panel header="⚠️ Produtos Vencidos" styleClass="p-panel-danger">
+                <p:dataTable id="produtosVencidosTable" value="#{produtoBean.expiredProducts}" var="product" 
+                            emptyMessage="Nenhum produto vencido encontrado"
+                            styleClass="p-datatable-sm">
+                    
+                    <p:column headerText="Código" width="100">
+                        <h:outputText value="#{product.code}" />
+                    </p:column>
+                    
+                    <p:column headerText="Descrição" width="200">
+                        <h:outputText value="#{product.description}" />
+                    </p:column>
+                    
+                    <p:column headerText="Quantidade" width="100">
+                        <h:outputText value="#{product.quantity}" />
+                    </p:column>
+                    
+                    <p:column headerText="Validade" width="100">
+                        <h:outputText value="#{product.expiryDate}" styleClass="expired">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </div>
+    </h:form>
+</h:body>
+</html>

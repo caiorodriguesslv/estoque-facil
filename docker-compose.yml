@@ -2,6 +2,18 @@ version: '3.8'
 
 services:
 
+  
+  maven-build:
+    image: maven:3.8-openjdk-8
+    container_name: estoque_facil_maven
+    volumes:
+      - .:/usr/src/app
+      - maven_repo:/root/.m2
+    working_dir: /usr/src/app
+    command: mvn clean package -DskipTests
+    profiles:
+      - build
+
   postgres:
     image: postgres:13
     container_name: estoque_facil_postgres
@@ -22,21 +34,7 @@ services:
       timeout: 5s
       retries: 5
 
-  tomcat:
-    image: tomcat:9-jdk8
-    container_name: estoque_facil_tomcat
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./target/estoque-facil.war:/usr/local/tomcat/webapps/estoque-facil.war
-    networks:
-      - estoque_network
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      - JAVA_OPTS=-Djava.security.egd=file:/dev/./urandom -Xmx512m -Xms256m
+  
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -63,7 +61,9 @@ volumes:
     driver: local
   pgadmin_data:
     driver: local
+  maven_repo:
+    driver: local
 
 networks:
   estoque_network:
-    driver: bridge 
+    driver: bridge
