@@ -23,9 +23,9 @@
         <property name="hibernate.c3p0.max_statements">50</property>
         <property name="hibernate.c3p0.idle_test_period">3000</property>
         
-        <!-- Mapeamento das Entidades (será adicionado conforme desenvolvemos) -->
-        <!-- <mapping class="org.devilish.entity.Usuario"/> -->
-        <!-- <mapping class="org.devilish.entity.Produto"/> -->
-        <!-- <mapping class="org.devilish.entity.Pagamento"/> -->
+        <!-- Entity Mappings -->
+        <mapping class="org.devilish.entity.User"/>
+        <mapping class="org.devilish.entity.Product"/>
+        <mapping class="org.devilish.entity.Payment"/>
     </session-factory>
 </hibernate-configuration> 
