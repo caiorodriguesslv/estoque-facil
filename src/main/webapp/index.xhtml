@@ -1,90 +1,211 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:p="http://primefaces.org/ui">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      lang="pt-BR">
 
 <h:head>
     <title>Estoque Fácil - Dashboard</title>
-    <style>
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .layout {
-            display: flex;
-            height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 220px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            box-sizing: border-box;
-            border-radius: 0 10px 10px 0;
-        }
-
-        .sidebar h2 {
-            margin-top: 0;
-            margin-bottom: 30px;
-            text-align: center;
-            font-size: 1.5em;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            color: white !important;
-            margin-bottom: 12px;
-            padding: 10px 15px;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: background 0.3s, transform 0.3s;
-        }
-
-        .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-            transform: translateX(5px);
-        }
-
-        .nav-link .pi {
-            margin-right: 10px;
-            font-size: 1.2em;
-        }
-
-        /* Conteúdo principal */
-        .content {
-            flex: 1;
-            padding: 40px;
-            background-color: #f4f4f4;
-        }
-    </style>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Sistema de Controle de Estoque - Dashboard Principal"/>
+    <meta name="keywords" content="estoque, controle, gestão, produtos, usuários, pagamentos"/>
+    <meta name="author" content="Estoque Fácil"/>
+    
+    <!-- CSS Files -->
+    <h:outputStylesheet library="css" name="styles.css" />
+    <h:outputStylesheet library="css" name="dashboard.css" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/resources/images/favicon.ico"/>
 </h:head>
 
 <h:body>
-    <div class="layout">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h2>Estoque Fácil</h2>
-
-            <p:link value="Usuários" outcome="users?faces-redirect=true" styleClass="nav-link" icon="pi pi-users" />
-            <p:link value="Produtos" outcome="products?faces-redirect=true" styleClass="nav-link" icon="pi pi-box" />
-            <p:link value="Pagamentos" outcome="payments?faces-redirect=true" styleClass="nav-link"
-                icon="pi pi-money-bill" />
+    <h:form id="dashboardForm">
+        <!-- Mensagens do Sistema -->
+        <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+        
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="loading-spinner"></div>
         </div>
+        
+        <div class="dashboard-layout">
+            <!-- Sidebar de Navegação -->
+            <nav class="dashboard-sidebar" role="navigation" aria-label="Menu principal">
+                <h2>📦 Estoque Fácil</h2>
 
-        <!-- Conteúdo principal -->
-        <div class="content">
-            <h1>Bem-vindo ao Sistema</h1>
-            <h2>Sistema de Controle de Estoque</h2>
-            <p>Gerencie seus produtos, usuários e pagamentos de forma simples e eficiente.</p>
+                <p:link value="🏠 Dashboard" 
+                       outcome="index?faces-redirect=true" 
+                       styleClass="nav-link" 
+                       icon="pi pi-home"
+                       title="Ir para Dashboard"
+                       aria-label="Ir para Dashboard" />
+                       
+                <p:link value="👥 Usuários" 
+                       outcome="users?faces-redirect=true" 
+                       styleClass="nav-link" 
+                       icon="pi pi-users"
+                       title="Gerenciar Usuários"
+                       aria-label="Gerenciar Usuários" />
+                       
+                <p:link value="📦 Produtos" 
+                       outcome="products?faces-redirect=true" 
+                       styleClass="nav-link" 
+                       icon="pi pi-box"
+                       title="Gerenciar Produtos"
+                       aria-label="Gerenciar Produtos" />
+                       
+                <p:link value="💰 Pagamentos" 
+                       outcome="payments?faces-redirect=true" 
+                       styleClass="nav-link" 
+                       icon="pi pi-money-bill"
+                       title="Gerenciar Pagamentos"
+                       aria-label="Gerenciar Pagamentos" />
+            </nav>
+
+            <!-- Conteúdo Principal -->
+            <main class="dashboard-content" role="main">
+                <!-- Header do Dashboard -->
+                <header class="dashboard-header">
+                    <h1>Bem-vindo ao Sistema</h1>
+                    <h2>Sistema de Controle de Estoque</h2>
+                    <p>Gerencie seus produtos, usuários e pagamentos de forma simples e eficiente.</p>
+                </header>
+
+                <!-- Estatísticas Principais -->
+                <section class="stats-container" aria-label="Estatísticas do sistema">
+                    <!-- Card de Usuários -->
+                    <div class="stat-card users" tabindex="0" role="button" 
+                         onclick="window.location.href='users.xhtml'"
+                         aria-label="#{dashboardBean.totalUsers} usuários cadastrados. Clique para gerenciar usuários.">
+                        <div class="stat-card-header">
+                            <h3 class="stat-card-title">Usuários Cadastrados</h3>
+                            <i class="stat-card-icon pi pi-users" aria-hidden="true"></i>
+                        </div>
+                        <p class="stat-card-value">#{dashboardBean.totalUsers}</p>
+                        <p class="stat-card-description">Total de usuários no sistema</p>
+                    </div>
+
+                    <!-- Card de Produtos -->
+                    <div class="stat-card products" tabindex="0" role="button"
+                         onclick="window.location.href='products.xhtml'"
+                         aria-label="#{dashboardBean.totalProducts} produtos em estoque. Clique para gerenciar produtos.">
+                        <div class="stat-card-header">
+                            <h3 class="stat-card-title">Produtos em Estoque</h3>
+                            <i class="stat-card-icon pi pi-box" aria-hidden="true"></i>
+                        </div>
+                        <p class="stat-card-value">#{dashboardBean.totalProducts}</p>
+                        <p class="stat-card-description">Total de produtos cadastrados</p>
+                    </div>
+
+                    <!-- Card de Produtos Vencidos -->
+                    <div class="stat-card expired" tabindex="0" role="button"
+                         onclick="window.location.href='products.xhtml'"
+                         aria-label="#{dashboardBean.expiredProducts} produtos vencidos. Clique para verificar produtos.">
+                        <div class="stat-card-header">
+                            <h3 class="stat-card-title">Produtos Vencidos</h3>
+                            <i class="stat-card-icon pi pi-exclamation-triangle" aria-hidden="true"></i>
+                        </div>
+                        <p class="stat-card-value #{dashboardBean.expiredProductsClass}">#{dashboardBean.expiredProducts}</p>
+                        <p class="stat-card-description">
+                            <span class="status-badge #{dashboardBean.expiredProductsBadgeClass}">
+                                #{dashboardBean.expiredProductsStatus}
+                            </span>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Ações Rápidas -->
+                <section class="actions-container" aria-label="Ações rápidas">
+                    <h3 class="actions-header">⚡ Ações Rápidas</h3>
+                    <div class="actions-grid">
+                        <p:commandButton value="➕ Novo Usuário" 
+                                        action="#{dashboardBean.goToUsers}"
+                                        icon="pi pi-user-plus"
+                                        styleClass="ui-button-success"
+                                        title="Cadastrar novo usuário"
+                                        aria-label="Cadastrar novo usuário" />
+                                        
+                        <p:commandButton value="📦 Novo Produto" 
+                                        action="#{dashboardBean.goToProducts}"
+                                        icon="pi pi-plus"
+                                        styleClass="ui-button-info"
+                                        title="Cadastrar novo produto"
+                                        aria-label="Cadastrar novo produto" />
+                                        
+                        <p:commandButton value="💰 Novo Pagamento" 
+                                        action="#{dashboardBean.goToPayments}"
+                                        icon="pi pi-money-bill"
+                                        styleClass="ui-button-warning"
+                                        title="Registrar novo pagamento"
+                                        aria-label="Registrar novo pagamento" />
+                                        
+                        <p:commandButton value="🔄 Atualizar Dados" 
+                                        action="#{dashboardBean.refreshStatistics}"
+                                        update="@form"
+                                        icon="pi pi-refresh"
+                                        styleClass="ui-button-secondary"
+                                        title="Atualizar estatísticas"
+                                        aria-label="Atualizar estatísticas do sistema"
+                                        onclick="showLoading();"
+                                        oncomplete="hideLoading();" />
+                    </div>
+                </section>
+
+                <!-- Status do Sistema -->
+                <section class="system-status" aria-label="Status do sistema">
+                    <h4>Status do Sistema</h4>
+                    <p>
+                        <span class="status-badge #{dashboardBean.systemStatusClass}">
+                            #{dashboardBean.systemStatus}
+                        </span>
+                    </p>
+                    
+                    <h:panelGroup rendered="#{dashboardBean.hasError}">
+                        <p style="color: #dc3545; margin-top: 10px;">
+                            <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+                            #{dashboardBean.errorMessage}
+                        </p>
+                        <p:commandButton value="🔧 Tentar Novamente" 
+                                        action="#{dashboardBean.retryInitialization}"
+                                        update="@form"
+                                        icon="pi pi-replay"
+                                        styleClass="ui-button-danger ui-button-sm"
+                                        title="Tentar reconectar com o sistema"
+                                        aria-label="Tentar reconectar com o sistema" />
+                    </h:panelGroup>
+                </section>
+            </main>
         </div>
-    </div>
+    </h:form>
+
+    <!-- Scripts -->
+    <script type="text/javascript">
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+        
+        // Keyboard navigation para cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card[role="button"]');
+            cards.forEach(card => {
+                card.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+        });
+    </script>
 </h:body>
-
 </html>
