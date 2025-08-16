@@ -15,6 +15,47 @@
         .menu-container { margin: 30px 0; }
         .menu-card { margin: 10px; }
         .stats-container { margin: 20px 0; }
+        .stats-card { margin: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .stats-card .ui-panel-titlebar { 
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+            color: #333; font-weight: 600; 
+        }
+        .status-badge { 
+            padding: 3px 8px; 
+            border-radius: 3px; 
+            color: white; 
+            font-weight: bold; 
+        }
+        .stats-number { 
+            margin: 0; 
+            font-size: 2em; 
+        }
+        .stats-center { 
+            text-align: center; 
+        }
+        .error-message { 
+            margin-top: 10px; 
+            padding: 10px; 
+            background-color: #f8d7da; 
+            border: 1px solid #f5c6cb; 
+            border-radius: 5px; 
+            color: #721c24; 
+        }
+        .status-ok { 
+            background-color: #28a745; 
+        }
+        .status-warning { 
+            background-color: #ffc107; 
+        }
+        .status-error { 
+            background-color: #dc3545; 
+        }
+        .expired-danger { 
+            color: #dc3545; 
+        }
+        .expired-safe { 
+            color: #28a745; 
+        }
     </style>
 </h:head>
 
@@ -36,7 +77,7 @@
                         </f:facet>
                         <f:facet name="content">
                             <p>Gerencie usuários do sistema</p>
-                            <p:commandButton value="Acessar" action="usuarios?faces-redirect=true" 
+                            <p:commandButton value="Acessar" action="users?faces-redirect=true" 
                                             icon="pi pi-users" styleClass="p-button-primary" />
                         </f:facet>
                     </p:card>
@@ -49,7 +90,7 @@
                         </f:facet>
                         <f:facet name="content">
                             <p>Controle de produtos e estoque</p>
-                            <p:commandButton value="Acessar" action="produtos?faces-redirect=true" 
+                            <p:commandButton value="Acessar" action="products?faces-redirect=true" 
                                             icon="pi pi-box" styleClass="p-button-success" />
                         </f:facet>
                     </p:card>
@@ -62,7 +103,7 @@
                         </f:facet>
                         <f:facet name="content">
                             <p>Registro de pagamentos e entregas</p>
-                            <p:commandButton value="Acessar" action="pagamentos?faces-redirect=true" 
+                            <p:commandButton value="Acessar" action="payments?faces-redirect=true" 
                                             icon="pi pi-money-bill" styleClass="p-button-warning" />
                         </f:facet>
                     </p:card>
@@ -70,21 +111,100 @@
             </h:panelGrid>
         </div>
         
-        <!-- Estatísticas Rápidas -->
-        <div class="stats-container">
-            <h:panelGrid columns="3" cellpadding="10">
-                <p:card>
+        <!-- Mensagens de Erro do Sistema -->
+        <h:form id="dashboardForm">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" />
+            
+            <!-- Alerta de erro se sistema não estiver inicializado -->
+            <p:outputPanel rendered="#{!dashboardBean.initialized}">
+                <p:card styleClass="p-card-danger">
                     <f:facet name="header">
-                        <h4>Estatísticas</h4>
+                        <h4>⚠️ Sistema Indisponível</h4>
                     </f:facet>
                     <f:facet name="content">
-                        <p>Total de Usuários: <strong>#{dashboardBean.totalUsers}</strong></p>
-                        <p>Total de Produtos: <strong>#{dashboardBean.totalProducts}</strong></p>
-                        <p>Produtos Vencidos: <strong>#{dashboardBean.expiredProducts}</strong></p>
+                        <p>O sistema está temporariamente indisponível. Verifique a conexão com o banco de dados.</p>
+                        <p:commandButton value="🔄 Tentar Novamente" 
+                                        action="#{dashboardBean.retryInitialization}" 
+                                        update="@form" 
+                                        icon="pi pi-refresh" 
+                                        styleClass="p-button-danger" />
                     </f:facet>
                 </p:card>
-            </h:panelGrid>
-        </div>
+            </p:outputPanel>
+            
+            <!-- Estatísticas Rápidas -->
+            <div class="stats-container">
+                <h:panelGrid columns="3" cellpadding="10">
+                    <!-- Card de Usuários -->
+                    <p:card styleClass="stats-card">
+                        <f:facet name="header">
+                            <h4>👥 Usuários</h4>
+                        </f:facet>
+                        <f:facet name="content">
+                            <div style="text-align: center;">
+                                <h2 style="color: #667eea; margin: 0;"><h:outputText value="#{dashboardBean.totalUsers}" /></h2>
+                                <p style="margin: 5px 0;">Total de usuários cadastrados</p>
+                            </div>
+                        </f:facet>
+                    </p:card>
+                    
+                    <!-- Card de Produtos -->
+                    <p:card styleClass="stats-card">
+                        <f:facet name="header">
+                            <h4>📦 Produtos</h4>
+                        </f:facet>
+                        <f:facet name="content">
+                            <div style="text-align: center;">
+                                <h2 style="color: #28a745; margin: 0;"><h:outputText value="#{dashboardBean.totalProducts}" /></h2>
+                                <p style="margin: 5px 0;">Total de produtos em estoque</p>
+                            </div>
+                        </f:facet>
+                    </p:card>
+                    
+                    <!-- Card de Produtos Vencidos -->
+                    <p:card styleClass="stats-card">
+                        <f:facet name="header">
+                            <h4>⚠️ Produtos Vencidos</h4>
+                        </f:facet>
+                        <f:facet name="content">
+                            <div class="stats-center">
+                                <h2 class="stats-number #{dashboardBean.expiredProductsClass}">
+                                    <h:outputText value="#{dashboardBean.expiredProducts}" />
+                                </h2>
+                                <p style="margin: 5px 0;">
+                                    <h:outputText value="#{dashboardBean.expiredProductsStatus}" 
+                                                  styleClass="status-badge #{dashboardBean.expiredProductsBadgeClass}" />
+                                </p>
+                            </div>
+                        </f:facet>
+                    </p:card>
+                </h:panelGrid>
+                
+                <!-- Botão para atualizar estatísticas e status do sistema -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <p:commandButton value="🔄 Atualizar Estatísticas" 
+                                    action="#{dashboardBean.refreshStatistics}" 
+                                    update="@form" 
+                                    icon="pi pi-refresh" 
+                                    styleClass="p-button-secondary"
+                                    disabled="#{!dashboardBean.initialized}" />
+                    
+                    <!-- Status do Sistema -->
+                    <div style="margin-top: 15px;">
+                        <h:outputText value="Status do Sistema: " />
+                        <h:outputText value="#{dashboardBean.systemStatus}" 
+                                      styleClass="status-badge #{dashboardBean.systemStatusClass}" />
+                    </div>
+                    
+                    <!-- Mensagem de erro detalhada -->
+                    <p:outputPanel rendered="#{dashboardBean.errorMessage != null and dashboardBean.errorMessage != ''}">
+                        <div class="error-message">
+                            <h:outputText value="#{dashboardBean.errorMessage}" />
+                        </div>
+                    </p:outputPanel>
+                </div>
+            </div>
+        </h:form>
     </div>
 </h:body>
 </html>
