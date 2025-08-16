@@ -15,14 +15,20 @@ public class HibernateUtil {
      */
     private static SessionFactory buildSessionFactory() {
         try {
+            System.out.println("=== INICIANDO CONFIGURAÇÃO DO HIBERNATE ===");
             // Cria a configuração a partir do arquivo hibernate.cfg.xml
             Configuration configuration = new Configuration();
             configuration.configure();
+            System.out.println("=== CONFIGURAÇÃO CARREGADA COM SUCESSO ===");
             
             // Constrói e retorna a SessionFactory
-            return configuration.buildSessionFactory();
+            SessionFactory factory = configuration.buildSessionFactory();
+            System.out.println("=== SESSION FACTORY CRIADA COM SUCESSO ===");
+            return factory;
         } catch (Throwable ex) {
+            System.err.println("=== ERRO AO INICIALIZAR SESSION FACTORY ===");
             System.err.println("Erro ao inicializar SessionFactory: " + ex);
+            ex.printStackTrace();
             throw new ExceptionInInitializerError(ex);
         }
     }

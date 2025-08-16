@@ -34,33 +34,33 @@
             <p:panel header="Cadastro de Produto" toggleable="true" collapsed="false">
                 <h:panelGrid columns="2" cellpadding="5">
                     <h:outputLabel for="codigo" value="Código do Produto:" />
-                    <p:inputText id="codigo" value="#{produtoBean.product.code}" 
+                    <p:inputText id="codigo" value="#{productBean.product.code}" 
                                 required="true" requiredMessage="Código é obrigatório"
-                                size="20" maxlength="50" disabled="#{produtoBean.editMode}">
+                                size="20" maxlength="50" disabled="#{productBean.editMode}">
                         <f:validateLength minimum="1" maximum="50" />
                     </p:inputText>
                     
                     <h:outputLabel for="descricao" value="Descrição:" />
-                    <p:inputText id="descricao" value="#{produtoBean.product.description}" 
+                    <p:inputText id="descricao" value="#{productBean.product.description}" 
                                 required="true" requiredMessage="Descrição é obrigatória"
                                 size="50" maxlength="200">
                         <f:validateLength minimum="3" maximum="200" />
                     </p:inputText>
                     
                     <h:outputLabel for="quantidade" value="Quantidade:" />
-                    <p:inputNumber id="quantidade" value="#{produtoBean.product.quantity}" 
+                    <p:inputNumber id="quantidade" value="#{productBean.product.quantity}" 
                                   required="true" requiredMessage="Quantidade é obrigatória"
                                   minValue="0" decimalPlaces="2" symbol="un">
                         <f:validateDoubleRange minimum="0" maximum="999999.99" />
                     </p:inputNumber>
                     
                     <h:outputLabel for="dataEntrada" value="Data de Entrada:" />
-                    <p:calendar id="dataEntrada" value="#{produtoBean.product.entryDate}" 
+                    <p:calendar id="dataEntrada" value="#{productBean.product.entryDate}" 
                                required="true" requiredMessage="Data de entrada é obrigatória"
                                pattern="dd/MM/yyyy" showTime="false" />
                     
                     <h:outputLabel for="dataValidade" value="Data de Validade:" />
-                    <p:calendar id="dataValidade" value="#{produtoBean.product.expiryDate}" 
+                    <p:calendar id="dataValidade" value="#{productBean.product.expiryDate}" 
                                required="true" requiredMessage="Data de validade é obrigatória"
                                pattern="dd/MM/yyyy" showTime="false" />
                 </h:panelGrid>
@@ -68,13 +68,13 @@
                 <p:separator />
                 
                 <h:panelGroup>
-                    <p:commandButton value="Salvar" action="#{produtoBean.save}" 
+                    <p:commandButton value="Salvar" action="#{productBean.save}" 
                                     update="@form" icon="pi pi-save" 
                                     styleClass="p-button-success" />
-                    <p:commandButton value="Limpar" action="#{produtoBean.clear}" 
+                    <p:commandButton value="Limpar" action="#{productBean.clear}" 
                                     update="@form" icon="pi pi-refresh" 
                                     styleClass="p-button-secondary" />
-                    <p:commandButton value="❌ Cancelar" action="#{produtoBean.cancel}" 
+                    <p:commandButton value="❌ Cancelar" action="#{productBean.cancel}" 
                                     update="@form" icon="pi pi-times" 
                                     styleClass="p-button-danger" />
                 </h:panelGroup>
@@ -86,16 +86,16 @@
             <p:panel header="�� Buscar Produtos">
                 <h:panelGrid columns="4" cellpadding="5">
                     <h:outputLabel for="searchCode" value="Buscar por Código:" />
-                    <p:inputText id="searchCode" value="#{produtoBean.searchCode}" 
+                    <p:inputText id="searchCode" value="#{productBean.searchCode}" 
                                 placeholder="Digite o código..." size="20" />
                     
                     <h:outputLabel for="searchExpiryDate" value="Buscar por Validade:" />
-                    <p:calendar id="searchExpiryDate" value="#{produtoBean.searchExpiryDate}" 
+                    <p:calendar id="searchExpiryDate" value="#{productBean.searchExpiryDate}" 
                                pattern="dd/MM/yyyy" showTime="false" />
                     
-                    <p:commandButton value="Buscar" action="#{produtoBean.searchByCode}" 
+                    <p:commandButton value="Buscar" action="#{productBean.searchByCode}" 
                                     update="@form" icon="pi pi-search" />
-                    <p:commandButton value="Buscar por Data" action="#{produtoBean.searchByExpiryDate}" 
+                    <p:commandButton value="Buscar por Data" action="#{productBean.searchByExpiryDate}" 
                                     update="@form" icon="pi pi-calendar" />
                 </h:panelGrid>
             </p:panel>
@@ -104,7 +104,7 @@
         <!-- Tabela de Produtos -->
         <div class="table-container">
             <p:panel header="📋 Lista de Produtos">
-                <p:dataTable id="produtosTable" value="#{produtoBean.products}" var="product" 
+                <p:dataTable id="produtosTable" value="#{productBean.products}" var="product" 
                             paginator="true" rows="10" 
                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                             rowsPerPageTemplate="5,10,20,50"
@@ -151,11 +151,11 @@
                     
                     <p:column headerText="Ações" width="150">
                         <h:panelGroup>
-                            <p:commandButton value="✏️" action="#{produtoBean.edit(product)}" 
+                            <p:commandButton value="✏️" action="#{productBean.edit(product)}" 
                                             update="@form" icon="pi pi-pencil" 
                                             styleClass="p-button-sm p-button-info" 
                                             title="Editar" />
-                            <p:commandButton value="🗑️" action="#{produtoBean.delete(product.code)}" 
+                            <p:commandButton value="🗑️" action="#{productBean.delete(product.code)}" 
                                             update="@form" icon="pi pi-trash" 
                                             styleClass="p-button-sm p-button-danger" 
                                             title="Excluir"
@@ -169,7 +169,7 @@
         <!-- Produtos Vencidos -->
         <div class="table-container">
             <p:panel header="⚠️ Produtos Vencidos" styleClass="p-panel-danger">
-                <p:dataTable id="produtosVencidosTable" value="#{produtoBean.expiredProducts}" var="product" 
+                <p:dataTable id="produtosVencidosTable" value="#{productBean.expiredProducts}" var="product" 
                             emptyMessage="Nenhum produto vencido encontrado"
                             styleClass="p-datatable-sm">
                     

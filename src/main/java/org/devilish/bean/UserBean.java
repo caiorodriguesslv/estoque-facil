@@ -23,9 +23,17 @@ public class UserBean {
     
     @PostConstruct
     public void init() {
-        userDAO = new UserDAOImpl();
-        user = new User();
-        loadUsers();
+        System.out.println("=== INICIALIZANDO USER BEAN ===");
+        try {
+            userDAO = new UserDAOImpl();
+            System.out.println("=== USER DAO CRIADO COM SUCESSO ===");
+            user = new User();
+            loadUsers();
+            System.out.println("=== USER BEAN INICIALIZADO - Total usuários: " + (users != null ? users.size() : "null") + " ===");
+        } catch (Exception e) {
+            System.err.println("=== ERRO AO INICIALIZAR USER BEAN ===");
+            e.printStackTrace();
+        }
     }
     
     public void save() {
@@ -80,9 +88,19 @@ public class UserBean {
     
     private void loadUsers() {
         try {
+            System.out.println("=== CARREGANDO USUÁRIOS ===");
             users = userDAO.findAll();
+            System.out.println("=== USUÁRIOS CARREGADOS: " + (users != null ? users.size() : "null") + " ===");
+            if (users != null) {
+                users.forEach(u -> System.out.println("Usuário: " + u.getName() + " - " + u.getEmail()));
+            }
         } catch (DAOException e) {
+            System.err.println("=== ERRO DAO AO CARREGAR USUÁRIOS ===");
+            e.printStackTrace();
             addMessage("Erro ao carregar usuários: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        } catch (Exception e) {
+            System.err.println("=== ERRO GERAL AO CARREGAR USUÁRIOS ===");
+            e.printStackTrace();
         }
     }
     

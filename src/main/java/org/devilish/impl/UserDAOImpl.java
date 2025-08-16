@@ -14,7 +14,9 @@ public class UserDAOImpl implements UserDAO {
     private final SessionFactory sessionFactory;
     
     public UserDAOImpl() {
+        System.out.println("=== CRIANDO USER DAO IMPL ===");
         this.sessionFactory = HibernateUtil.getSessionFactory();
+        System.out.println("=== SESSION FACTORY OBTIDA ===");
     }
     
     @Override
@@ -78,13 +80,20 @@ public class UserDAOImpl implements UserDAO {
         Session session = null;
         
         try {
+            System.out.println("=== INICIANDO BUSCA DE TODOS OS USUÁRIOS ===");
             session = sessionFactory.openSession();
-            return session.createQuery("FROM User u", User.class).list();
+            System.out.println("=== SESSÃO ABERTA ===");
+            List<User> result = session.createQuery("FROM User u", User.class).list();
+            System.out.println("=== QUERY EXECUTADA - Resultados: " + (result != null ? result.size() : "null") + " ===");
+            return result;
         } catch (Exception e) {
+            System.err.println("=== ERRO NA BUSCA DE USUÁRIOS ===");
+            e.printStackTrace();
             throw new DAOException("Erro ao buscar todos os usuários", e);
         } finally {
             if (session != null) {
                 session.close();
+                System.out.println("=== SESSÃO FECHADA ===");
             }
         }
     }
