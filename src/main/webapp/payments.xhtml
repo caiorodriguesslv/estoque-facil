@@ -13,7 +13,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     
     <h:outputStylesheet library="css" name="styles.css" />
-    <h:outputStylesheet library="css" name="dashboard.css" />
+    <h:outputStylesheet library="css" name="layout.css" />
+    <h:outputStylesheet library="css" name="payments.css" />
 </h:head>
 
 <h:body>
@@ -65,7 +66,7 @@
                 
                 <!-- Formulário de Cadastro -->
                 <div class="form-container">
-                    <p:panel header="Registro de Pagamento" toggleable="true" collapsed="false">
+                    <p:panel header="💰 Registro de Pagamento" toggleable="true" collapsed="false" styleClass="payment-form">
                 <h:panelGrid columns="2" cellpadding="5">
                     <h:outputLabel for="selectedProduct" value="Produto:" />
                     <p:selectOneMenu id="selectedProduct" value="#{paymentBean.selectedProductCode}" 
@@ -100,17 +101,19 @@
                 
                 <p:separator />
                 
-                <h:panelGroup>
-                    <p:commandButton value="💰 Registrar Pagamento" action="#{paymentBean.save}" 
+                <div class="button-group" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <p:commandButton value="Registrar Pagamento" action="#{paymentBean.save}" 
                                     update="@form" icon="pi pi-save" 
-                                    styleClass="p-button-success" />
+                                    styleClass="p-button-success" 
+                                    style="margin-right: 8px;" />
                     <p:commandButton value="Limpar" action="#{paymentBean.clear}" 
                                     update="@form" icon="pi pi-refresh" 
-                                    styleClass="p-button-secondary" />
-                    <p:commandButton value="❌ Cancelar" action="#{paymentBean.cancel}" 
+                                    styleClass="p-button-secondary" 
+                                    style="margin-right: 8px;" />
+                    <p:commandButton value="Cancelar" action="#{paymentBean.cancel}" 
                                     update="@form" icon="pi pi-times" 
                                     styleClass="p-button-danger" />
-                </h:panelGroup>
+                </div>
             </p:panel>
                 </div>
                 
@@ -195,14 +198,15 @@
                         <h:outputText value="#{payment.paymentDate.toString()}" />
                     </p:column>
                     
-                    <p:column headerText="Ações" width="100">
-                        <h:panelGroup>
-                            <p:commandButton value="🗑️" action="#{paymentBean.delete(payment.id)}" 
+                    <p:column headerText="Ações" width="80" style="text-align: center;">
+                        <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
+                            <p:commandButton action="#{paymentBean.delete(payment.id)}" 
                                             update="@form" icon="pi pi-trash" 
-                                            styleClass="p-button-sm p-button-danger" 
-                                            title="Excluir"
+                                            styleClass="p-button-sm p-button-danger p-button-rounded" 
+                                            title="Excluir pagamento"
+                                            style="width: 32px; height: 32px;" 
                                             onclick="return confirm('Tem certeza que deseja excluir este pagamento?')" />
-                        </h:panelGroup>
+                        </div>
                     </p:column>
                 </p:dataTable>
                 </p:panel>

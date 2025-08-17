@@ -13,7 +13,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         
         <h:outputStylesheet library="css" name="styles.css" />
-        <h:outputStylesheet library="css" name="dashboard.css" />
+        <h:outputStylesheet library="css" name="layout.css" />
+        <h:outputStylesheet library="css" name="users.css" />
     </h:head>
 
 <h:body>
@@ -84,17 +85,19 @@
                 
                 <p:separator />
                 
-                <h:panelGroup>
+                <div class="button-group" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
                     <p:commandButton value="Salvar" action="#{userBean.save}" 
                                     update="@form" icon="pi pi-save" 
-                                    styleClass="p-button-success" />
+                                    styleClass="p-button-success" 
+                                    style="margin-right: 8px;" />
                     <p:commandButton value="Limpar" action="#{userBean.clear}" 
                                     update="@form" icon="pi pi-refresh" 
-                                    styleClass="p-button-secondary" />
-                    <p:commandButton value="❌ Cancelar" action="#{userBean.cancel}" 
+                                    styleClass="p-button-secondary" 
+                                    style="margin-right: 8px;" />
+                    <p:commandButton value="Cancelar" action="#{userBean.cancel}" 
                                     update="@form" icon="pi pi-times" 
                                     styleClass="p-button-danger" />
-                </h:panelGroup>
+                </div>
             </p:panel>
                 </div>
                 
@@ -135,18 +138,20 @@
                         <h:outputText value="#{user.email}" />
                     </p:column>
                     
-                    <p:column headerText="Ações" width="150">
-                        <h:panelGroup>
-                            <p:commandButton value="✏️" action="#{userBean.edit(user)}" 
+                    <p:column headerText="Ações" width="120" style="text-align: center;">
+                        <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
+                            <p:commandButton action="#{userBean.edit(user)}" 
                                             update="@form" icon="pi pi-pencil" 
-                                            styleClass="p-button-sm p-button-info" 
-                                            title="Editar" />
-                            <p:commandButton value="🗑️" action="#{userBean.delete(user.id)}" 
+                                            styleClass="p-button-sm p-button-info p-button-rounded" 
+                                            title="Editar usuário" 
+                                            style="width: 32px; height: 32px;" />
+                            <p:commandButton action="#{userBean.delete(user.id)}" 
                                             update="@form" icon="pi pi-trash" 
-                                            styleClass="p-button-sm p-button-danger" 
-                                            title="Excluir"
+                                            styleClass="p-button-sm p-button-danger p-button-rounded" 
+                                            title="Excluir usuário"
+                                            style="width: 32px; height: 32px;" 
                                             onclick="return confirm('Tem certeza que deseja excluir este usuário?')" />
-                        </h:panelGroup>
+                        </div>
                     </p:column>
                 </p:dataTable>
                 </p:panel>

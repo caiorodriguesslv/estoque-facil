@@ -1,0 +1,298 @@
+/* ===== LAYOUT E SIDEBAR COMUM ===== */
+
+/* Reset de links específico para sidebar */
+.dashboard-sidebar,
+.dashboard-sidebar *,
+.dashboard-sidebar *:before,
+.dashboard-sidebar *:after,
+.dashboard-sidebar a,
+.dashboard-sidebar a:link,
+.dashboard-sidebar a:visited,
+.dashboard-sidebar a:hover,
+.dashboard-sidebar a:active,
+.dashboard-sidebar a:focus {
+    text-decoration: none !important;
+    border-bottom: none !important;
+    text-underline-offset: initial !important;
+    text-decoration-line: none !important;
+    text-decoration-style: none !important;
+    text-decoration-color: transparent !important;
+}
+
+/* Layout principal */
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Regra global anti-sublinhado */
+.dashboard-sidebar *,
+.dashboard-sidebar a,
+.dashboard-sidebar a:link,
+.dashboard-sidebar a:visited,
+.dashboard-sidebar a:hover,
+.dashboard-sidebar a:active,
+.dashboard-sidebar a:focus,
+.dashboard-sidebar .ui-menuitem-link,
+.dashboard-sidebar .ui-widget,
+.nav-link,
+.nav-link:link,
+.nav-link:visited,
+.nav-link:hover,
+.nav-link:active,
+.nav-link:focus,
+.dashboard-sidebar .ui-link,
+.dashboard-sidebar .ui-commandlink {
+    text-decoration: none !important;
+    border-bottom: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Regra específica para PrimeFaces p:link */
+.dashboard-sidebar .ui-link,
+.dashboard-sidebar .ui-link:hover,
+.dashboard-sidebar .ui-link:focus,
+.dashboard-sidebar .ui-link:active {
+    text-decoration: none !important;
+}
+
+/* Sidebar */
+.dashboard-sidebar {
+    width: 200px;
+    min-width: 200px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.dashboard-sidebar a,
+.dashboard-sidebar a:hover,
+.dashboard-sidebar a:focus,
+.dashboard-sidebar a:active,
+.dashboard-sidebar a:visited {
+    text-decoration: none !important;
+}
+
+.dashboard-sidebar h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.4em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-title {
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.4em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Links de navegação */
+.nav-link {
+    display: flex;
+    align-items: center;
+    color: white !important;
+    margin-bottom: 8px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    font-size: 0.95em;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link:active,
+.nav-link:visited {
+    text-decoration: none !important;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.nav-link .pi {
+    margin-right: 10px;
+    font-size: 1.1em;
+}
+
+.nav-link:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.5s;
+    opacity: 0;
+}
+
+.nav-link:hover:after {
+    opacity: 1;
+}
+
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+}
+
+/* Conteúdo principal */
+.dashboard-content {
+    flex: 1;
+    padding: 30px;
+    background: #f8f9fa;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Header do dashboard */
+.dashboard-layout .dashboard-content .dashboard-header,
+.dashboard-content .dashboard-header,
+header.dashboard-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 25px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+}
+
+.dashboard-layout .dashboard-content .dashboard-header h1,
+.dashboard-content .dashboard-header h1,
+header.dashboard-header h1,
+.dashboard-header h1 {
+    margin: 0 0 10px 0 !important;
+    font-size: 2.8em !important;
+    font-weight: 300 !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+    color: white !important;
+    background: transparent !important;
+}
+
+.dashboard-layout .dashboard-content .dashboard-header h2,
+.dashboard-content .dashboard-header h2,
+header.dashboard-header h2,
+.dashboard-header h2 {
+    margin: 0 0 10px 0 !important;
+    font-size: 1.4em !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    background: transparent !important;
+}
+
+.dashboard-layout .dashboard-content .dashboard-header p,
+.dashboard-content .dashboard-header p,
+header.dashboard-header p,
+.dashboard-header p {
+    margin: 0 !important;
+    font-size: 1.1em !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    background: transparent !important;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .dashboard-sidebar {
+        width: 180px;
+        min-width: 180px;
+        padding: 12px;
+    }
+    
+    .sidebar-title,
+    .dashboard-sidebar h2 {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+    }
+    
+    .nav-link {
+        padding: 10px 12px;
+        font-size: 0.9em;
+    }
+    
+    .nav-link .pi {
+        font-size: 1em;
+        margin-right: 8px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .dashboard-layout {
+        flex-direction: column;
+    }
+    
+    .dashboard-sidebar {
+        width: 100%;
+        height: auto;
+        border-radius: 0;
+        position: relative;
+    }
+    
+    .nav-link {
+        padding: 12px 15px;
+    }
+    
+    .nav-link:hover {
+        transform: none;
+    }
+    
+    .dashboard-content {
+        padding: 20px;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 2.2em !important;
+    }
+    
+    .dashboard-header h2 {
+        font-size: 1.2em !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-content {
+        padding: 15px;
+    }
+    
+    .dashboard-sidebar {
+        padding: 15px;
+    }
+    
+    .dashboard-header {
+        padding: 20px;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 1.8em !important;
+    }
+    
+    .nav-link {
+        font-size: 0.9em;
+    }
+}

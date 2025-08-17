@@ -14,7 +14,7 @@
     
    
     <h:outputStylesheet library="css" name="styles.css" />
-    <h:outputStylesheet library="css" name="dashboard.css" />
+    <h:outputStylesheet library="css" name="layout.css" />
     <h:outputStylesheet library="css" name="products.css" />
 </h:head>
 
@@ -69,9 +69,9 @@
                 <p:messages id="messages" showDetail="true" autoUpdate="true" />
                 
                 <div class="form-container">
-                    <p:panel header="Cadastro de Produto" toggleable="true" collapsed="false">
+                    <p:panel header="Cadastro de Produto" toggleable="true" collapsed="false" styleClass="product-form">
                         <h:panelGrid columns="2" cellpadding="5">
-                        <h:outputLabel for="codigo" value="Código do Produto:" />
+                        <h:outputLabel for="codigo" value="Código:" />
                         <p:inputText id="codigo" value="#{productBean.product.code}" 
                                     required="true" requiredMessage="Código é obrigatório"
                                     size="20" maxlength="50">
@@ -81,52 +81,52 @@
                         <h:outputLabel for="descricao" value="Descrição:" />
                         <p:inputText id="descricao" value="#{productBean.product.description}" 
                                     required="true" requiredMessage="Descrição é obrigatória"
-                                    size="50" maxlength="200">
+                                    size="40" maxlength="200">
                             <f:validateLength minimum="3" maximum="200" />
                         </p:inputText>
                         
                         <h:outputLabel for="quantidade" value="Quantidade:" />
-                        <h:inputText id="quantidade" value="#{productBean.product.quantity}" 
-                                    required="true" requiredMessage="Quantidade é obrigatória"
-                                    size="15" maxlength="10">
-                            <f:convertNumber />
+                        <p:inputNumber id="quantidade" value="#{productBean.product.quantity}" 
+                                      required="true" requiredMessage="Quantidade é obrigatória"
+                                      minValue="0" decimalPlaces="2">
                             <f:validateDoubleRange minimum="0" maximum="999999.99" />
-                        </h:inputText>
+                        </p:inputNumber>
                         
                         <h:outputLabel for="dataEntrada" value="Data de Entrada:" />
-                        <h:inputText id="dataEntrada" value="#{productBean.product.entryDate}" 
+                        <p:calendar id="dataEntrada" value="#{productBean.product.entryDate}" 
                                    required="true" requiredMessage="Data de entrada é obrigatória"
-                                   placeholder="dd/MM/yyyy" size="12" />
+                                   pattern="dd/MM/yyyy" showTime="false" />
                         
                         <h:outputLabel for="dataValidade" value="Data de Validade:" />
-                        <h:inputText id="dataValidade" value="#{productBean.product.expiryDate}" 
+                        <p:calendar id="dataValidade" value="#{productBean.product.expiryDate}" 
                                    required="true" requiredMessage="Data de validade é obrigatória"
-                                   placeholder="dd/MM/yyyy" size="12" />
+                                   pattern="dd/MM/yyyy" showTime="false" />
                     </h:panelGrid>
                     
                     <p:separator />
                     
-                    <h:panelGroup>
+                    <div class="button-group" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
                         <p:commandButton value="Salvar" action="#{productBean.save}" 
                                         update="@form" icon="pi pi-save" 
-                                        styleClass="p-button-success" />
+                                        styleClass="p-button-success" 
+                                        style="margin-right: 8px;" />
                         <p:commandButton value="Limpar" action="#{productBean.clear}" 
                                         update="@form" icon="pi pi-refresh" 
-                                        styleClass="p-button-secondary" />
+                                        styleClass="p-button-secondary" 
+                                        style="margin-right: 8px;" />
                         <p:commandButton value="Cancelar" action="#{productBean.cancel}" 
                                         update="@form" icon="pi pi-times" 
                                         styleClass="p-button-danger" />
-                    </h:panelGroup>
+                    </div>
                 </p:panel>
                 </div>
                 
-                <div class="form-container">
-                    <p:panel header="Buscar Produtos">
+                <div class="search-container">
+                    <p:panel header="🔍 Buscar Produto">
                         <h:panelGrid columns="3" cellpadding="5">
                         <h:outputLabel for="searchCode" value="Buscar por Código:" />
                         <p:inputText id="searchCode" value="#{productBean.searchCode}" 
-                                    placeholder="Digite o código..." size="20" />
-                        
+                                    placeholder="Digite o código..." size="30" />
                         <p:commandButton value="Buscar" action="#{productBean.search}" 
                                         update="@form" icon="pi pi-search" />
                     </h:panelGrid>
@@ -134,16 +134,21 @@
                 </div>
                 
                 <div class="table-container">
-                    <p:panel header="Lista de Produtos">
+                    <p:panel header="📦 Lista de Produtos">
                     <p:dataTable id="produtosTable" value="#{productBean.products}" var="product" 
                                 paginator="true" rows="10" 
-                                emptyMessage="Nenhum produto encontrado">
+                                paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                rowsPerPageTemplate="5,10,20,50"
+                                emptyMessage="Nenhum produto encontrado"
+                                styleClass="p-datatable-sm">
                         
-                        <p:column headerText="Código" sortBy="#{product.code}" width="100">
+                        <p:column headerText="Código" sortBy="#{product.code}" filterBy="#{product.code}" 
+                                  filterMatchMode="contains" width="100">
                             <h:outputText value="#{product.code}" />
                         </p:column>
                         
-                        <p:column headerText="Descrição" sortBy="#{product.description}" width="200">
+                        <p:column headerText="Descrição" sortBy="#{product.description}" filterBy="#{product.description}" 
+                                  filterMatchMode="contains" width="200">
                             <h:outputText value="#{product.description}" />
                         </p:column>
                         
@@ -161,18 +166,20 @@
                             <h:outputText value="#{product.expiryDate}" />
                         </p:column>
                         
-                        <p:column headerText="Ações" width="150">
-                            <h:panelGroup>
-                                <p:commandButton value="Editar" action="#{productBean.edit(product)}" 
+                        <p:column headerText="Ações" width="120" style="text-align: center;">
+                            <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
+                                <p:commandButton action="#{productBean.edit(product)}" 
                                                 update="@form" icon="pi pi-pencil" 
-                                                styleClass="p-button-sm p-button-info" 
-                                                title="Editar" />
-                                <p:commandButton value="Excluir" action="#{productBean.delete(product.code)}" 
+                                                styleClass="p-button-sm p-button-info p-button-rounded" 
+                                                title="Editar produto" 
+                                                style="width: 32px; height: 32px;" />
+                                <p:commandButton action="#{productBean.delete(product.code)}" 
                                                 update="@form" icon="pi pi-trash" 
-                                                styleClass="p-button-sm p-button-danger" 
-                                                title="Excluir"
+                                                styleClass="p-button-sm p-button-danger p-button-rounded" 
+                                                title="Excluir produto"
+                                                style="width: 32px; height: 32px;" 
                                                 onclick="return confirmDelete()" />
-                            </h:panelGroup>
+                            </div>
                         </p:column>
                     </p:dataTable>
                 </p:panel>
