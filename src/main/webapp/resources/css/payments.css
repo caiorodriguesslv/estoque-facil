@@ -19,50 +19,95 @@
     justify-content: center !important;
 }
 
-/* Garantir que as cores dos botões PrimeFaces sejam preservadas */
-.p-button-success {
-    background-color: #28a745 !important;
-    border-color: #28a745 !important;
+/* Garantir que as cores dos botões sejam consistentes com o sistema */
+.p-button-success,
+.ui-button.p-button-success,
+button.p-button-success {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: white !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+    transition: all 0.3s ease !important;
 }
 
-.p-button-secondary {
-    background-color: #6c757d !important;
-    border-color: #6c757d !important;
+.p-button-secondary,
+.ui-button.p-button-secondary,
+button.p-button-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: white !important;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+    transition: all 0.3s ease !important;
 }
 
-.p-button-danger {
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
+.p-button-danger,
+.ui-button.p-button-danger,
+button.p-button-danger {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: white !important;
+    box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3) !important;
+    transition: all 0.3s ease !important;
 }
 
-.p-button-info {
-    background-color: #17a2b8 !important;
-    border-color: #17a2b8 !important;
+.p-button-info,
+.ui-button.p-button-info,
+button.p-button-info {
+    background: linear-gradient(135deg, #5a67d8 0%, #4c51bf 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: white !important;
+    box-shadow: 0 4px 15px rgba(90, 103, 216, 0.3) !important;
+    transition: all 0.3s ease !important;
 }
 
-/* Hover states */
-.p-button-success:hover {
-    background-color: #218838 !important;
-    border-color: #1e7e34 !important;
+/* HOVER STATES */
+.p-button-success:hover,
+.ui-button.p-button-success:hover,
+button.p-button-success:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
 }
 
-.p-button-secondary:hover {
-    background-color: #5a6268 !important;
-    border-color: #545b62 !important;
+.p-button-secondary:hover,
+.ui-button.p-button-secondary:hover,
+button.p-button-secondary:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #343a40 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4) !important;
 }
 
-.p-button-danger:hover {
-    background-color: #c82333 !important;
-    border-color: #bd2130 !important;
+.p-button-danger:hover,
+.ui-button.p-button-danger:hover,
+button.p-button-danger:hover {
+    background: linear-gradient(135deg, #c53030 0%, #9c1a1a 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4) !important;
 }
 
-.p-button-info:hover {
-    background-color: #138496 !important;
-    border-color: #117a8b !important;
+.p-button-info:hover,
+.ui-button.p-button-info:hover,
+button.p-button-info:hover {
+    background: linear-gradient(135deg, #4c51bf 0%, #44337a 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(90, 103, 216, 0.4) !important;
+}
+
+/* BUTTON GROUP SPACING */
+.button-group {
+    margin-top: 15px !important;
+    display: flex !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+}
+
+.button-group .ui-button {
+    margin-right: 8px !important;
+    margin-bottom: 5px !important;
+}
+
+.button-group .ui-button:last-child {
+    margin-right: 0 !important;
 }
 
 /* Estilos específicos para formulário de pagamentos */
@@ -87,13 +132,13 @@
         flex-direction: column !important;
         align-items: stretch !important;
     }
-    
+
     .button-group .ui-button {
         margin-right: 0 !important;
         margin-bottom: 8px !important;
         width: 100% !important;
     }
-    
+
     .payment-form .ui-selectonemenu,
     .payment-form .ui-inputnumber,
     .payment-form .ui-calendar {

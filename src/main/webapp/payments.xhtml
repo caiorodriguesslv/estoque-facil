@@ -15,6 +15,98 @@
     <h:outputStylesheet library="css" name="styles.css" />
     <h:outputStylesheet library="css" name="layout.css" />
     <h:outputStylesheet library="css" name="payments.css" />
+    
+    <style>
+        .p-button-success,
+        .ui-button.p-button-success,
+        button.p-button-success {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .p-button-secondary,
+        .ui-button.p-button-secondary,
+        button.p-button-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .p-button-danger,
+        .ui-button.p-button-danger,
+        button.p-button-danger {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .p-button-info,
+        .ui-button.p-button-info,
+        button.p-button-info {
+            background: linear-gradient(135deg, #5a67d8 0%, #4c51bf 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(90, 103, 216, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        /* HOVER STATES */
+        .p-button-success:hover,
+        .ui-button.p-button-success:hover,
+        button.p-button-success:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+        }
+        
+        .p-button-secondary:hover,
+        .ui-button.p-button-secondary:hover,
+        button.p-button-secondary:hover {
+            background: linear-gradient(135deg, #5a6268 0%, #343a40 100%) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4) !important;
+        }
+        
+        .p-button-danger:hover,
+        .ui-button.p-button-danger:hover,
+        button.p-button-danger:hover {
+            background: linear-gradient(135deg, #c53030 0%, #9c1a1a 100%) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4) !important;
+        }
+        
+        .p-button-info:hover,
+        .ui-button.p-button-info:hover,
+        button.p-button-info:hover {
+            background: linear-gradient(135deg, #4c51bf 0%, #44337a 100%) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(90, 103, 216, 0.4) !important;
+        }
+        
+        /* BUTTON GROUP SPACING */
+        .button-group {
+            margin-top: 15px !important;
+            display: flex !important;
+            gap: 10px !important;
+            flex-wrap: wrap !important;
+        }
+        
+        .button-group .ui-button {
+            margin-right: 8px !important;
+            margin-bottom: 5px !important;
+        }
+        
+        .button-group .ui-button:last-child {
+            margin-right: 0 !important;
+        }
+    </style>
 </h:head>
 
 <h:body>
@@ -66,7 +158,7 @@
                 
                 <!-- Formulário de Cadastro -->
                 <div class="form-container">
-                    <p:panel header="💰 Registro de Pagamento" toggleable="true" collapsed="false" styleClass="payment-form">
+                    <p:panel header="Registro de Pagamento" toggleable="true" collapsed="false" styleClass="payment-form">
                 <h:panelGrid columns="2" cellpadding="5">
                     <h:outputLabel for="selectedProduct" value="Produto:" />
                     <p:selectOneMenu id="selectedProduct" value="#{paymentBean.selectedProductCode}" 
