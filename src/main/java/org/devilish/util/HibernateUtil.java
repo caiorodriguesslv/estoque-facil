@@ -1,5 +1,6 @@
 package org.devilish.util;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -37,7 +38,53 @@ public class HibernateUtil {
      * Retorna a SessionFactory configurada
      */
     public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            System.err.println("=== ALERTA: SESSION FACTORY É NULL ===");
+            return null;
+        }
+        
+        if (sessionFactory.isClosed()) {
+            System.err.println("=== ALERTA: SESSION FACTORY ESTÁ FECHADA ===");
+            System.err.println("=== TENTANDO RECRIAR SESSION FACTORY ===");
+            // Não podemos recriar aqui pois é static final, mas podemos logar
+            return sessionFactory; // Retorna mesmo fechada para debug
+        }
+        
         return sessionFactory;
+    }
+    
+    /**
+     * Verifica o status da SessionFactory
+     */
+    public static String getStatus() {
+        if (sessionFactory == null) {
+            return "NULL";
+        }
+        return sessionFactory.isClosed() ? "FECHADA" : "ABERTA";
+    }
+    
+    /**
+     * Força verificação de conectividade
+     */
+    public static boolean testConnection() {
+        try {
+            if (sessionFactory == null || sessionFactory.isClosed()) {
+                System.err.println("=== TESTE CONEXÃO: SessionFactory indisponível ===");
+                return false;
+            }
+            
+            Session testSession = sessionFactory.openSession();
+            Long count = testSession.createQuery("SELECT COUNT(*) FROM Product", Long.class).uniqueResult();
+            testSession.close();
+            
+            System.out.println("=== TESTE CONEXÃO: Sucesso - " + count + " produtos ===");
+            return true;
+            
+        } catch (Exception e) {
+            System.err.println("=== TESTE CONEXÃO: Falha - " + e.getMessage() + " ===");
+            e.printStackTrace();
+            return false;
+        }
     }
     
     /**

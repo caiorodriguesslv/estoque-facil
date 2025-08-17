@@ -2,38 +2,41 @@ package org.devilish.bean;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import java.util.List;
+import java.time.LocalDate;
 import org.devilish.dao.ProductDAO;
 import org.devilish.impl.ProductDAOImpl;
 import org.devilish.entity.Product;
 import org.devilish.exceptions.BusinessException;
 import org.devilish.exceptions.DAOException;
-import java.util.List;
-import java.time.LocalDate;
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import java.math.BigDecimal;
-import java.util.Arrays;
-
 
 @ManagedBean
 @ViewScoped
 public class ProductBean {
-    
     private ProductDAO productDAO;
     private Product product;
     private List<Product> products;
     private List<Product> expiredProducts;
     private String searchCode;
     private LocalDate searchExpiryDate;
-    private boolean editMode = false;
     
     @PostConstruct
     public void init() {
-        productDAO = new ProductDAOImpl();
-        product = new Product();
-        loadProducts();
-        loadExpiredProducts();
+        System.out.println("=== INICIALIZANDO PRODUCT BEAN ===");
+        try {
+            productDAO = new ProductDAOImpl();
+            System.out.println("=== PRODUCT DAO CRIADO COM SUCESSO ===");
+            product = new Product();
+            loadProducts();
+            loadExpiredProducts();
+            System.out.println("=== PRODUCT BEAN INICIALIZADO - Total produtos: " + (products != null ? products.size() : "null") + " ===");
+        } catch (Exception e) {
+            System.err.println("=== ERRO AO INICIALIZAR PRODUCT BEAN ===");
+            e.printStackTrace();
+        }
     }
     
     public void save() {
@@ -43,21 +46,23 @@ public class ProductBean {
                 return;
             }
             
-            if (!editMode && productDAO.existsByCode(product.getCode())) {
-                addMessage("Produto com este código já existe!", FacesMessage.SEVERITY_ERROR);
-                return;
-            }
-            
-            if (editMode) {
-                productDAO.update(product);
-                addMessage("Produto atualizado com sucesso!", FacesMessage.SEVERITY_INFO);
-            } else {
+            // Verifica se é um novo produto ou atualização
+            try {
+                Product existing = productDAO.findByCode(product.getCode());
+                if (existing != null) {
+                    productDAO.update(product);
+                    addMessage("Produto atualizado com sucesso!", FacesMessage.SEVERITY_INFO);
+                } else {
+                    productDAO.save(product);
+                    addMessage("Produto salvo com sucesso!", FacesMessage.SEVERITY_INFO);
+                }
+            } catch (DAOException e) {
+                // Se não encontrou, é um produto novo
                 productDAO.save(product);
                 addMessage("Produto salvo com sucesso!", FacesMessage.SEVERITY_INFO);
             }
             
             product = new Product();
-            editMode = false;
             loadProducts();
             loadExpiredProducts();
         } catch (BusinessException e) {
@@ -66,8 +71,6 @@ public class ProductBean {
             addMessage("Erro ao salvar produto: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
-    
-
     
     public void delete(String code) {
         try {
@@ -80,12 +83,16 @@ public class ProductBean {
         }
     }
     
-    public void searchByCode() {
+    public void edit(Product product) {
+        this.product = product;
+    }
+    
+    public void search() {
         if (searchCode != null && !searchCode.trim().isEmpty()) {
             try {
                 Product foundProduct = productDAO.findByCode(searchCode);
                 if (foundProduct != null) {
-                    products = Arrays.asList(foundProduct);
+                    products = java.util.Arrays.asList(foundProduct);
                 } else {
                     addMessage("Produto não encontrado", FacesMessage.SEVERITY_WARN);
                     loadProducts();
@@ -98,43 +105,36 @@ public class ProductBean {
         }
     }
     
-    public void searchByExpiryDate() {
-        if (searchExpiryDate != null) {
-            try {
-                products = productDAO.findByExpiryDate(searchExpiryDate);
-            } catch (DAOException e) {
-                addMessage("Erro na busca: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
-            }
-        } else {
-            loadProducts();
-        }
-    }
-    
-    public void updateQuantity(String code, BigDecimal newQuantity) {
-        try {
-            productDAO.updateQuantity(code, newQuantity);
-            addMessage("Quantidade atualizada com sucesso!", FacesMessage.SEVERITY_INFO);
-            loadProducts();
-        } catch (BusinessException e) {
-            addMessage(e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        } catch (DAOException e) {
-            addMessage("Erro ao atualizar quantidade: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        }
-    }
-    
     private void loadProducts() {
         try {
+            System.out.println("=== CARREGANDO PRODUTOS ===");
             products = productDAO.findAll();
+            System.out.println("=== PRODUTOS CARREGADOS: " + (products != null ? products.size() : "null") + " ===");
+            if (products != null) {
+                products.forEach(p -> System.out.println("Produto: " + p.getCode() + " - " + p.getDescription()));
+            }
         } catch (DAOException e) {
+            System.err.println("=== ERRO DAO AO CARREGAR PRODUTOS ===");
+            e.printStackTrace();
             addMessage("Erro ao carregar produtos: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        } catch (Exception e) {
+            System.err.println("=== ERRO GERAL AO CARREGAR PRODUTOS ===");
+            e.printStackTrace();
         }
     }
     
     private void loadExpiredProducts() {
         try {
+            System.out.println("=== CARREGANDO PRODUTOS VENCIDOS ===");
             expiredProducts = productDAO.findExpiredProducts();
+            System.out.println("=== PRODUTOS VENCIDOS CARREGADOS: " + (expiredProducts != null ? expiredProducts.size() : "null") + " ===");
         } catch (DAOException e) {
+            System.err.println("=== ERRO DAO AO CARREGAR PRODUTOS VENCIDOS ===");
+            e.printStackTrace();
             addMessage("Erro ao carregar produtos vencidos: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        } catch (Exception e) {
+            System.err.println("=== ERRO GERAL AO CARREGAR PRODUTOS VENCIDOS ===");
+            e.printStackTrace();
         }
     }
     
@@ -146,33 +146,22 @@ public class ProductBean {
     public void clear() {
         product = new Product();
         searchCode = null;
-        searchExpiryDate = null;
-        editMode = false;
     }
     
     public void cancel() {
         product = new Product();
         searchCode = null;
-        searchExpiryDate = null;
-        editMode = false;
     }
     
-    public void edit(Product product) {
-        this.product = product;
-        this.editMode = true;
-    }
-    
-   
+    // Getters e Setters
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
     public List<Product> getProducts() { return products; }
     public void setProducts(List<Product> products) { this.products = products; }
     public List<Product> getExpiredProducts() { return expiredProducts; }
+    public void setExpiredProducts(List<Product> expiredProducts) { this.expiredProducts = expiredProducts; }
     public String getSearchCode() { return searchCode; }
     public void setSearchCode(String searchCode) { this.searchCode = searchCode; }
     public LocalDate getSearchExpiryDate() { return searchExpiryDate; }
     public void setSearchExpiryDate(LocalDate searchExpiryDate) { this.searchExpiryDate = searchExpiryDate; }
-    public boolean isEditMode() { return editMode; }
-    public void setEditMode(boolean editMode) { this.editMode = editMode; }
 }
-

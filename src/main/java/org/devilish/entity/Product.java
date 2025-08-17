@@ -87,6 +87,16 @@ public class Product implements Serializable {
         return LocalDate.now().isBefore(expiryDate) || LocalDate.now().isEqual(expiryDate);
     }
     
+    // Verifica se o produto está vencido
+    public boolean isExpired() {
+        return LocalDate.now().isAfter(expiryDate);
+    }
+    
+    // Verifica se o produto está próximo ao vencimento (7 dias)
+    public boolean isWarning() {
+        LocalDate warningDate = LocalDate.now().plusDays(7);
+        return !isExpired() && (expiryDate.isBefore(warningDate) || expiryDate.isEqual(warningDate));
+    }
     
     // Verifica se o produto tem estoque suficiente
     public boolean hasStock(BigDecimal requestedQuantity) {
