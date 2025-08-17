@@ -19,7 +19,7 @@
     justify-content: center !important;
 }
 
-/* Garantir que as cores dos botões sejam consistentes com o sistema */
+
 .p-button-success,
 .ui-button.p-button-success,
 button.p-button-success {
@@ -60,7 +60,7 @@ button.p-button-info {
     transition: all 0.3s ease !important;
 }
 
-/* HOVER STATES */
+/* HOVER STATES - IDÊNTICOS AO PRODUCTS */
 .p-button-success:hover,
 .ui-button.p-button-success:hover,
 button.p-button-success:hover {

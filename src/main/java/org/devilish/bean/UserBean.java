@@ -56,16 +56,43 @@ public class UserBean {
     
     public void delete(Long id) {
         try {
+            System.out.println("=== DELETANDO USUÁRIO ID: " + id + " ===");
+            if (id == null) {
+                addMessage("ID do usuário não pode ser nulo", FacesMessage.SEVERITY_ERROR);
+                return;
+            }
             userDAO.delete(id);
             addMessage("Usuário removido com sucesso!", FacesMessage.SEVERITY_INFO);
             loadUsers();
         } catch (DAOException e) {
+            System.err.println("=== ERRO DAO AO DELETAR USUÁRIO ===");
+            e.printStackTrace();
             addMessage("Erro ao remover usuário: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        } catch (Exception e) {
+            System.err.println("=== ERRO GERAL AO DELETAR USUÁRIO ===");
+            e.printStackTrace();
+            addMessage("Erro inesperado ao remover usuário", FacesMessage.SEVERITY_ERROR);
         }
     }
     
-    public void edit(User user) {
-        this.user = user;
+    public void edit(User selectedUser) {
+        try {
+            System.out.println("=== EDITANDO USUÁRIO: " + (selectedUser != null ? selectedUser.getName() + " (ID: " + selectedUser.getId() + ")" : "NULL") + " ===");
+            if (selectedUser == null) {
+                addMessage("Usuário selecionado não pode ser nulo", FacesMessage.SEVERITY_ERROR);
+                return;
+            }
+            // Criar uma cópia para edição
+            this.user = new User();
+            this.user.setId(selectedUser.getId());
+            this.user.setName(selectedUser.getName());
+            this.user.setEmail(selectedUser.getEmail());
+            addMessage("Usuário carregado para edição: " + selectedUser.getName(), FacesMessage.SEVERITY_INFO);
+        } catch (Exception e) {
+            System.err.println("=== ERRO AO EDITAR USUÁRIO ===");
+            e.printStackTrace();
+            addMessage("Erro ao carregar usuário para edição: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
     }
     
     public void search() {

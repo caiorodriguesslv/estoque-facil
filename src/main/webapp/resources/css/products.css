@@ -759,16 +759,45 @@ button.p-button-info:hover {
 /* Estilos específicos para formulário de produtos */
 .product-form .ui-inputtext {
     width: 100% !important;
+    max-width: 400px;
 }
 
 .product-form .ui-inputnumber {
     width: 100% !important;
-    max-width: 200px;
+    max-width: 300px;
 }
 
 .product-form .ui-calendar {
     width: 100% !important;
-    max-width: 150px;
+    max-width: 250px;
+}
+
+/* Remover bordas duplas dos campos PrimeFaces em produtos */
+.product-form .ui-inputnumber .ui-inputtext,
+.product-form .ui-calendar .ui-inputtext,
+.product-form .ui-inputtext {
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    padding: 8px 12px !important;
+    box-shadow: none !important;
+    background: white !important;
+}
+
+/* Remover bordas dos contêineres pai */
+.product-form .ui-inputnumber,
+.product-form .ui-calendar {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* Estilo dos campos em foco */
+.product-form .ui-inputnumber .ui-inputtext:focus,
+.product-form .ui-calendar .ui-inputtext:focus,
+.product-form .ui-inputtext:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2) !important;
+    outline: none !important;
 }
 
 /* Responsividade para botões de produtos */

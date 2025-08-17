@@ -19,7 +19,7 @@
     justify-content: center !important;
 }
 
-/* Garantir que as cores dos botões sejam consistentes com o sistema */
+
 .p-button-success,
 .ui-button.p-button-success,
 button.p-button-success {
@@ -60,7 +60,7 @@ button.p-button-info {
     transition: all 0.3s ease !important;
 }
 
-/* HOVER STATES */
+/* HOVER STATES - IDÊNTICOS AO PRODUCTS */
 .p-button-success:hover,
 .ui-button.p-button-success:hover,
 button.p-button-success:hover {
@@ -113,17 +113,73 @@ button.p-button-info:hover {
 /* Estilos específicos para formulário de pagamentos */
 .payment-form .ui-selectonemenu {
     width: 100% !important;
-    max-width: 300px;
+    max-width: 400px;
 }
 
 .payment-form .ui-inputnumber {
     width: 100% !important;
-    max-width: 150px;
+    max-width: 300px;
 }
 
 .payment-form .ui-calendar {
     width: 100% !important;
-    max-width: 150px;
+    max-width: 250px;
+}
+
+/* Estilos para área de busca */
+.search-container h:panelGrid {
+    width: 100%;
+}
+
+.search-container .ui-outputlabel {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.search-container .ui-selectonemenu {
+    width: 100% !important;
+}
+
+.search-container .ui-calendar {
+    width: 100% !important;
+}
+
+/* Remover bordas duplas dos campos PrimeFaces */
+.payment-form .ui-inputnumber .ui-inputtext,
+.payment-form .ui-calendar .ui-inputtext,
+.payment-form .ui-selectonemenu,
+.search-container .ui-inputnumber .ui-inputtext,
+.search-container .ui-calendar .ui-inputtext,
+.search-container .ui-selectonemenu {
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    padding: 8px 12px !important;
+    box-shadow: none !important;
+    background: white !important;
+}
+
+/* Remover bordas dos contêineres pai */
+.payment-form .ui-inputnumber,
+.payment-form .ui-calendar,
+.search-container .ui-inputnumber,
+.search-container .ui-calendar {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* Estilo dos campos em foco */
+.payment-form .ui-inputnumber .ui-inputtext:focus,
+.payment-form .ui-calendar .ui-inputtext:focus,
+.payment-form .ui-selectonemenu:focus,
+.search-container .ui-inputnumber .ui-inputtext:focus,
+.search-container .ui-calendar .ui-inputtext:focus,
+.search-container .ui-selectonemenu:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2) !important;
+    outline: none !important;
 }
 
 /* Responsividade para botões */

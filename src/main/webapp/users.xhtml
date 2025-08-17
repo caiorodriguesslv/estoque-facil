@@ -148,7 +148,7 @@
         <!-- Conteúdo Principal -->
         <main class="dashboard-content" role="main">
             <header class="dashboard-header">
-                <h1>Gestão de Usuários</h1>
+                <h1>Módulo de Gestão de Usuários</h1>
                 <p>Sistema de Controle de Estoque</p>
             </header>
 
@@ -216,9 +216,6 @@
                             emptyMessage="Nenhum usuário encontrado"
                             styleClass="p-datatable-sm">
                     
-                    <p:column headerText="ID" width="60">
-                        <h:outputText value="#{user.id}" />
-                    </p:column>
                     
                     <p:column headerText="Nome" sortBy="#{user.name}" filterBy="#{user.name}" 
                               filterMatchMode="contains" width="200">
@@ -231,19 +228,21 @@
                     </p:column>
                     
                     <p:column headerText="Ações" width="120" style="text-align: center;">
-                        <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
-                            <p:commandButton action="#{userBean.edit(user)}" 
-                                            update="@form" icon="pi pi-pencil" 
+                        <h:panelGroup style="display: flex; gap: 5px; justify-content: center;">
+                            <p:commandButton icon="pi pi-pencil" 
+                                            actionListener="#{userBean.edit(user)}" 
+                                            update=":usuarioForm" 
                                             styleClass="p-button-sm p-button-info p-button-rounded" 
-                                            title="Editar usuário" 
-                                            style="width: 32px; height: 32px;" />
-                            <p:commandButton action="#{userBean.delete(user.id)}" 
-                                            update="@form" icon="pi pi-trash" 
+                                            title="Editar usuário"
+                                            immediate="true" />
+                            <p:commandButton icon="pi pi-trash" 
+                                            actionListener="#{userBean.delete(user.id)}" 
+                                            update=":usuarioForm" 
                                             styleClass="p-button-sm p-button-danger p-button-rounded" 
                                             title="Excluir usuário"
-                                            style="width: 32px; height: 32px;" 
+                                            immediate="true"
                                             onclick="return confirm('Tem certeza que deseja excluir este usuário?')" />
-                        </div>
+                        </h:panelGroup>
                     </p:column>
                 </p:dataTable>
                 </p:panel>
