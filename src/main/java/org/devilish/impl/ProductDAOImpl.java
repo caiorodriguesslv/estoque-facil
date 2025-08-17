@@ -233,6 +233,26 @@ public class ProductDAOImpl implements ProductDAO {
         }
     }
     
+    @Override
+    public List<Product> findValidProducts() {
+        Session session = null;
+        
+        try {
+            session = sessionFactory.openSession();
+            return session.createQuery(
+                "FROM Product p WHERE p.quantity > 0 AND p.expiryDate >= :today ORDER BY p.code", 
+                Product.class)
+                .setParameter("today", LocalDate.now())
+                .list();
+        } catch (Exception e) {
+            throw new DAOException("Erro ao buscar produtos válidos", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+    
     private void validateProduct(Product product) {
         if (product.getCode() == null || product.getCode().trim().isEmpty()) {
             throw new BusinessException("Código do produto é obrigatório");

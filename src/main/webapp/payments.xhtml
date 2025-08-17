@@ -159,13 +159,15 @@
                 <!-- Formulário de Cadastro -->
                 <div class="form-container">
                     <p:panel header="Registro de Pagamento" toggleable="true" collapsed="false" styleClass="payment-form">
+
+                
                 <h:panelGrid columns="2" cellpadding="5">
                     <h:outputLabel for="selectedProduct" value="Produto:" />
                     <p:selectOneMenu id="selectedProduct" value="#{paymentBean.selectedProductCode}" 
                                     required="true" requiredMessage="Produto é obrigatório">
                         <f:selectItem itemLabel="Selecione um produto..." itemValue="" />
                         <f:selectItems value="#{paymentBean.availableProducts}" 
-                                      var="product" itemLabel="#{product.code} - #{product.description}" 
+                                      var="product" itemLabel="#{product.code} - #{product.description} (Estoque: #{product.quantity})" 
                                       itemValue="#{product.code}" />
                     </p:selectOneMenu>
                     
@@ -202,64 +204,12 @@
                                     update="@form" icon="pi pi-refresh" 
                                     styleClass="p-button-secondary" 
                                     style="margin-right: 8px;" />
+
                     <p:commandButton value="Cancelar" action="#{paymentBean.cancel}" 
                                     update="@form" icon="pi pi-times" 
                                     styleClass="p-button-danger" />
                 </div>
             </p:panel>
-                </div>
-                
-                <!-- Área de Busca -->
-                <div class="search-container">
-                    <p:panel header="🔍 Buscar Pagamentos">
-                        
-                        <!-- Busca por Usuário e Produto -->
-                        <h:panelGrid columns="2" cellpadding="8" style="width: 100%; margin-bottom: 15px;">
-                            <h:outputLabel for="searchUser" value="Buscar por Usuário:" />
-                            <p:selectOneMenu id="searchUser" value="#{paymentBean.selectedUserId}" style="width: 100%; max-width: 400px;">
-                                <f:selectItem itemLabel="Todos os usuários..." itemValue="" />
-                                <f:selectItems value="#{paymentBean.availableUsers}" 
-                                              var="user" itemLabel="#{user.name}" 
-                                              itemValue="#{user.id}" />
-                            </p:selectOneMenu>
-                            
-                            <h:outputLabel for="searchProduct" value="Buscar por Produto:" />
-                            <p:selectOneMenu id="searchProduct" value="#{paymentBean.selectedProductCode}" style="width: 100%; max-width: 400px;">
-                                <f:selectItem itemLabel="Todos os produtos..." itemValue="" />
-                                <f:selectItems value="#{paymentBean.availableProducts}" 
-                                              var="product" itemLabel="#{product.code}" 
-                                              itemValue="#{product.code}" />
-                            </p:selectOneMenu>
-                        </h:panelGrid>
-                        
-                        <!-- Botões de Busca -->
-                        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-                            <p:commandButton value="🔍 Buscar por Usuário" action="#{paymentBean.searchByUser}" 
-                                            update="@form" icon="pi pi-user" styleClass="p-button-info" />
-                            <p:commandButton value="🔍 Buscar por Produto" action="#{paymentBean.searchByProduct}" 
-                                            update="@form" icon="pi pi-box" styleClass="p-button-info" />
-                        </div>
-                        
-                        <p:separator />
-                        
-                        <!-- Busca por Período -->
-                        <h:panelGrid columns="2" cellpadding="8" style="width: 100%; margin-top: 15px;">
-                            <h:outputLabel for="startDate" value="Data Inicial:" />
-                            <p:calendar id="startDate" value="#{paymentBean.startDate}" 
-                                       pattern="dd/MM/yyyy" showTime="false" style="width: 100%; max-width: 250px;" />
-                            
-                            <h:outputLabel for="endDate" value="Data Final:" />
-                            <p:calendar id="endDate" value="#{paymentBean.endDate}" 
-                                       pattern="dd/MM/yyyy" showTime="false" style="width: 100%; max-width: 250px;" />
-                        </h:panelGrid>
-                        
-                        <!-- Botão de Busca por Período -->
-                        <div style="margin-top: 15px;">
-                            <p:commandButton value="📅 Buscar por Período" action="#{paymentBean.searchByDateRange}" 
-                                            update="@form" icon="pi pi-calendar" styleClass="p-button-info" />
-                        </div>
-                        
-                    </p:panel>
                 </div>
                 
                 <!-- Tabela de Pagamentos -->

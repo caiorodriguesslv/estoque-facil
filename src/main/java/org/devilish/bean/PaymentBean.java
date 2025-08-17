@@ -153,7 +153,7 @@ public class PaymentBean {
     
     private void loadAvailableProducts() {
         try {
-            availableProducts = productDAO.findAll();
+            availableProducts = productDAO.findValidProducts();
         } catch (DAOException e) {
             addMessage("Erro ao carregar produtos: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
@@ -187,6 +187,8 @@ public class PaymentBean {
         startDate = null;
         endDate = null;
     }
+    
+
     
     
     public Payment getPayment() { return payment; }

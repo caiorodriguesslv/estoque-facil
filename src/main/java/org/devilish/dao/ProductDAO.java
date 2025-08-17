@@ -16,5 +16,6 @@ public interface ProductDAO {
     void delete(String code);
     boolean existsByCode(String code);
     void updateQuantity(String code, BigDecimal newQuantity);
+    List<Product> findValidProducts();
     
 } 
