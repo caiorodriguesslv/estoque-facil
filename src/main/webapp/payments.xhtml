@@ -8,23 +8,67 @@
       xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <h:head>
-    <title>Gestão de Pagamentos - Estoque Fácil</title>
+    <title>Estoque Fácil - Gestão de Pagamentos</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
     <h:outputStylesheet library="css" name="styles.css" />
+    <h:outputStylesheet library="css" name="dashboard.css" />
 </h:head>
 
 <h:body>
-    <div class="header">
-        <h1>Gestão de Pagamentos</h1>
-        <p>Sistema de Controle de Estoque</p>
-    </div>
+    <!-- Layout Principal com Sidebar -->
+    <div class="dashboard-layout">
+        <!-- Sidebar de Navegação -->
+        <nav class="dashboard-sidebar" role="navigation" aria-label="Menu principal">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Estoque Fácil</h2>
+                <p class="sidebar-subtitle">Sistema de Gestão</p>
+            </div>
 
-    <h:form id="paymentForm">
-        <!-- Mensagens de Feedback -->
-        <p:messages id="messages" showDetail="true" autoUpdate="true" />
-        
-        <!-- Formulário de Cadastro -->
-        <div class="form-container">
-            <p:panel header="Registro de Pagamento" toggleable="true" collapsed="false">
+            <p:link value="🏠 Dashboard" 
+                   outcome="index?faces-redirect=true" 
+                   styleClass="nav-link" 
+                   icon="pi pi-home"
+                   title="Ir para Dashboard"
+                   aria-label="Ir para Dashboard" />
+                   
+            <p:link value="👥 Usuários" 
+                   outcome="users?faces-redirect=true" 
+                   styleClass="nav-link" 
+                   icon="pi pi-users"
+                   title="Gerenciar Usuários"
+                   aria-label="Gerenciar Usuários" />
+                   
+            <p:link value="📦 Produtos" 
+                   outcome="products?faces-redirect=true" 
+                   styleClass="nav-link" 
+                   icon="pi pi-box"
+                   title="Gerenciar Produtos"
+                   aria-label="Gerenciar Produtos" />
+                   
+            <p:link value="💰 Pagamentos" 
+                   outcome="payments?faces-redirect=true" 
+                   styleClass="nav-link active" 
+                   icon="pi pi-money-bill"
+                   title="Gerenciar Pagamentos"
+                   aria-label="Gerenciar Pagamentos" />
+        </nav>
+
+        <!-- Conteúdo Principal -->
+        <main class="dashboard-content" role="main">
+            <header class="dashboard-header">
+                <h1>Gestão de Pagamentos</h1>
+                <p>Sistema de Controle de Estoque</p>
+            </header>
+
+            <h:form id="paymentForm">
+                <!-- Mensagens de Feedback -->
+                <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                
+                <!-- Formulário de Cadastro -->
+                <div class="form-container">
+                    <p:panel header="Registro de Pagamento" toggleable="true" collapsed="false">
                 <h:panelGrid columns="2" cellpadding="5">
                     <h:outputLabel for="selectedProduct" value="Produto:" />
                     <p:selectOneMenu id="selectedProduct" value="#{paymentBean.selectedProductCode}" 
@@ -71,11 +115,11 @@
                                     styleClass="p-button-danger" />
                 </h:panelGroup>
             </p:panel>
-        </div>
-        
-        <!-- Área de Busca -->
-        <div class="search-container">
-            <p:panel header="🔍 Buscar Pagamentos">
+                </div>
+                
+                <!-- Área de Busca -->
+                <div class="search-container">
+                    <p:panel header="🔍 Buscar Pagamentos">
                 <h:panelGrid columns="6" cellpadding="5">
                     <h:outputLabel for="searchUser" value="Buscar por Usuário:" />
                     <p:selectOneMenu id="searchUser" value="#{paymentBean.selectedUserId}">
@@ -114,11 +158,11 @@
                                     update="@form" icon="pi pi-calendar" />
                 </h:panelGrid>
             </p:panel>
-        </div>
-        
-        <!-- Tabela de Pagamentos -->
-        <div class="table-container">
-            <p:panel header="📋 Lista de Pagamentos">
+                </div>
+                
+                <!-- Tabela de Pagamentos -->
+                <div class="table-container">
+                    <p:panel header="📋 Lista de Pagamentos">
                 <p:dataTable id="paymentsTable" value="#{paymentBean.payments}" var="payment" 
                             paginator="true" rows="10" 
                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -164,8 +208,10 @@
                         </h:panelGroup>
                     </p:column>
                 </p:dataTable>
-            </p:panel>
-        </div>
-    </h:form>
+                </p:panel>
+                </div>
+            </h:form>
+        </main>
+    </div>
 </h:body>
 </html>

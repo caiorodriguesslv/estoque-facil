@@ -7,36 +7,68 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets">
 
-      <h:head>
-        <title> Estoque Fácil - Gestão de Usuários </title>
-        <style>
-            .dashboard { margin: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                      color: white; padding: 30px; border-radius: 10px; text-align: center; }
-            .menu-container { margin: 30px 0; }
-            .menu-card { margin: 10px; }
-            .stats-container { margin: 20px 0; }
-            .stats-card { margin: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-            .stats-card .ui-panel-titlebar { 
-                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
-                color: #333; font-weight: 600; 
-            }
-        </style>
+    <h:head>
+        <title>Estoque Fácil - Gestão de Usuários</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <h:outputStylesheet library="css" name="styles.css" />
+        <h:outputStylesheet library="css" name="dashboard.css" />
     </h:head>
 
 <h:body>
-    <div class="header">
-        <h1>Gestão de Usuários</h1>
-        <p>Sistema de Controle de Estoque</p>
-    </div>
+    <!-- Layout Principal com Sidebar -->
+    <div class="dashboard-layout">
+        <!-- Sidebar de Navegação -->
+        <nav class="dashboard-sidebar" role="navigation" aria-label="Menu principal">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Estoque Fácil</h2>
+                <p class="sidebar-subtitle">Sistema de Gestão</p>
+            </div>
 
-    <h:form id="usuarioForm">
-        <!-- Mensagens de Feedback -->
-        <p:messages id="messages" showDetail="true" autoUpdate="true" />
-        
-        <!-- Formulário de Cadastro/Edição -->
-        <div class="form-container">
-            <p:panel header="Cadastro de Usuário" toggleable="true" collapsed="false">
+            <p:link value="🏠 Dashboard" 
+                   outcome="index?faces-redirect=true" 
+                   styleClass="nav-link" 
+                   icon="pi pi-home"
+                   title="Ir para Dashboard"
+                   aria-label="Ir para Dashboard" />
+                   
+            <p:link value="👥 Usuários" 
+                   outcome="users?faces-redirect=true" 
+                   styleClass="nav-link active" 
+                   icon="pi pi-users"
+                   title="Gerenciar Usuários"
+                   aria-label="Gerenciar Usuários" />
+                   
+            <p:link value="📦 Produtos" 
+                   outcome="products?faces-redirect=true" 
+                   styleClass="nav-link" 
+                   icon="pi pi-box"
+                   title="Gerenciar Produtos"
+                   aria-label="Gerenciar Produtos" />
+                   
+            <p:link value="💰 Pagamentos" 
+                   outcome="payments?faces-redirect=true" 
+                   styleClass="nav-link" 
+                   icon="pi pi-money-bill"
+                   title="Gerenciar Pagamentos"
+                   aria-label="Gerenciar Pagamentos" />
+        </nav>
+
+        <!-- Conteúdo Principal -->
+        <main class="dashboard-content" role="main">
+            <header class="dashboard-header">
+                <h1>Gestão de Usuários</h1>
+                <p>Sistema de Controle de Estoque</p>
+            </header>
+
+            <h:form id="usuarioForm">
+                <!-- Mensagens de Feedback -->
+                <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                
+                <!-- Formulário de Cadastro/Edição -->
+                <div class="form-container">
+                    <p:panel header="Cadastro de Usuário" toggleable="true" collapsed="false">
                 <h:panelGrid columns="2" cellpadding="5">
                     <h:outputLabel for="nome" value="Nome Completo:" />
                     <p:inputText id="nome" value="#{userBean.user.name}" 
@@ -67,11 +99,11 @@
                                     styleClass="p-button-danger" />
                 </h:panelGroup>
             </p:panel>
-        </div>
-        
-        <!-- Área de Busca -->
-        <div class="search-container">
-            <p:panel header="🔍 Buscar Usuário">
+                </div>
+                
+                <!-- Área de Busca -->
+                <div class="search-container">
+                    <p:panel header="🔍 Buscar Usuário">
                 <h:panelGrid columns="3" cellpadding="5">
                     <h:outputLabel for="searchEmail" value="Buscar por E-mail:" />
                     <p:inputText id="searchEmail" value="#{userBean.searchEmail}" 
@@ -80,11 +112,11 @@
                                     update="@form" icon="pi pi-search" />
                 </h:panelGrid>
             </p:panel>
-        </div>
-        
-        <!-- Tabela de Usuários -->
-        <div class="table-container">
-            <p:panel header="👥 Lista de Usuários">
+                </div>
+                
+                <!-- Tabela de Usuários -->
+                <div class="table-container">
+                    <p:panel header="👥 Lista de Usuários">
                 <p:dataTable id="usuariosTable" value="#{userBean.users}" var="user" 
                             paginator="true" rows="10" 
                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -120,8 +152,10 @@
                         </h:panelGroup>
                     </p:column>
                 </p:dataTable>
-            </p:panel>
-        </div>
-    </h:form>
+                </p:panel>
+                </div>
+            </h:form>
+        </main>
+    </div>
 </h:body>
 </html>

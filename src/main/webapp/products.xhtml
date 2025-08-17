@@ -14,29 +14,66 @@
     
    
     <h:outputStylesheet library="css" name="styles.css" />
+    <h:outputStylesheet library="css" name="dashboard.css" />
     <h:outputStylesheet library="css" name="products.css" />
 </h:head>
 
 <h:body>
-    
     <div id="loadingOverlay" class="loading-overlay" style="display: none;">
         <div class="loading-spinner"></div>
     </div>
 
-    
-    <div class="page-container">
+    <!-- Layout Principal com Sidebar -->
+    <div class="dashboard-layout">
+        <!-- Sidebar de Navegação -->
+        <nav class="dashboard-sidebar" role="navigation" aria-label="Menu principal">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Estoque Fácil</h2>
+                <p class="sidebar-subtitle">Sistema de Gestão</p>
+            </div>
 
-        <div class="header">
-            <h1>Gestão de Produtos</h1>
-            <p>Sistema de Controle de Estoque</p>
-        </div>
+            <p:link value="🏠 Dashboard" 
+                   outcome="index?faces-redirect=true" 
+                   styleClass="nav-link" 
+                   icon="pi pi-home"
+                   title="Ir para Dashboard"
+                   aria-label="Ir para Dashboard" />
+                   
+            <p:link value="👥 Usuários" 
+                   outcome="users?faces-redirect=true" 
+                   styleClass="nav-link" 
+                   icon="pi pi-users"
+                   title="Gerenciar Usuários"
+                   aria-label="Gerenciar Usuários" />
+                   
+            <p:link value="📦 Produtos" 
+                   outcome="products?faces-redirect=true" 
+                   styleClass="nav-link active" 
+                   icon="pi pi-box"
+                   title="Gerenciar Produtos"
+                   aria-label="Gerenciar Produtos" />
+                   
+            <p:link value="💰 Pagamentos" 
+                   outcome="payments?faces-redirect=true" 
+                   styleClass="nav-link" 
+                   icon="pi pi-money-bill"
+                   title="Gerenciar Pagamentos"
+                   aria-label="Gerenciar Pagamentos" />
+        </nav>
 
-        <h:form id="produtoForm">
-            <p:messages id="messages" showDetail="true" autoUpdate="true" />
-            
-            <div class="form-container">
-                <p:panel header="Cadastro de Produto" toggleable="true" collapsed="false">
-                    <h:panelGrid columns="2" cellpadding="5">
+        <!-- Conteúdo Principal -->
+        <main class="dashboard-content" role="main">
+            <header class="dashboard-header">
+                <h1>Gestão de Produtos</h1>
+                <p>Sistema de Controle de Estoque</p>
+            </header>
+
+            <h:form id="produtoForm">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                
+                <div class="form-container">
+                    <p:panel header="Cadastro de Produto" toggleable="true" collapsed="false">
+                        <h:panelGrid columns="2" cellpadding="5">
                         <h:outputLabel for="codigo" value="Código do Produto:" />
                         <p:inputText id="codigo" value="#{productBean.product.code}" 
                                     required="true" requiredMessage="Código é obrigatório"
@@ -84,12 +121,11 @@
                                         styleClass="p-button-danger" />
                     </h:panelGroup>
                 </p:panel>
-            </div>
-            
-           
-            <div class="form-container">
-                <p:panel header="Buscar Produtos">
-                    <h:panelGrid columns="3" cellpadding="5">
+                </div>
+                
+                <div class="form-container">
+                    <p:panel header="Buscar Produtos">
+                        <h:panelGrid columns="3" cellpadding="5">
                         <h:outputLabel for="searchCode" value="Buscar por Código:" />
                         <p:inputText id="searchCode" value="#{productBean.searchCode}" 
                                     placeholder="Digite o código..." size="20" />
@@ -98,11 +134,10 @@
                                         update="@form" icon="pi pi-search" />
                     </h:panelGrid>
                 </p:panel>
-            </div>
-            
-            
-            <div class="table-container">
-                <p:panel header="Lista de Produtos">
+                </div>
+                
+                <div class="table-container">
+                    <p:panel header="Lista de Produtos">
                     <p:dataTable id="produtosTable" value="#{productBean.products}" var="product" 
                                 paginator="true" rows="10" 
                                 emptyMessage="Nenhum produto encontrado">
@@ -144,11 +179,10 @@
                         </p:column>
                     </p:dataTable>
                 </p:panel>
-            </div>
-            
-            
-            <h:panelGroup rendered="#{not empty productBean.expiredProducts}">
-                <div class="table-container">
+                </div>
+                
+                <h:panelGroup rendered="#{not empty productBean.expiredProducts}">
+                    <div class="table-container">
                     <p:panel header="Produtos Vencidos" styleClass="p-panel-danger">
                         <p:dataTable id="produtosVencidosTable" value="#{productBean.expiredProducts}" var="product" 
                                     emptyMessage="Nenhum produto vencido encontrado"
@@ -173,11 +207,12 @@
                             </p:column>
                         </p:dataTable>
                     </p:panel>
-                </div>
-            </h:panelGroup>
-        </h:form>
+                    </div>
+                </h:panelGroup>
+            </h:form>
+        </main>
     </div>
-    
+     
     <!-- Scripts -->
     <script type="text/javascript">
         function confirmDelete() {
