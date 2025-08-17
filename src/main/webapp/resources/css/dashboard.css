@@ -1,8 +1,59 @@
+/* ===== RESET DE LINKS ESPECÍFICO PARA SIDEBAR ===== */
+.dashboard-sidebar,
+.dashboard-sidebar *,
+.dashboard-sidebar *:before,
+.dashboard-sidebar *:after,
+.dashboard-sidebar a,
+.dashboard-sidebar a:link,
+.dashboard-sidebar a:visited,
+.dashboard-sidebar a:hover,
+.dashboard-sidebar a:active,
+.dashboard-sidebar a:focus {
+    text-decoration: none !important;
+    border-bottom: none !important;
+    text-underline-offset: initial !important;
+    text-decoration-line: none !important;
+    text-decoration-style: none !important;
+    text-decoration-color: transparent !important;
+}
+
 /* ===== DASHBOARD ESPECÍFICO ===== */
 .dashboard-layout {
     display: flex;
     min-height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== REGRA GLOBAL ANTI-SUBLINHADO ===== */
+.dashboard-sidebar *,
+.dashboard-sidebar a,
+.dashboard-sidebar a:link,
+.dashboard-sidebar a:visited,
+.dashboard-sidebar a:hover,
+.dashboard-sidebar a:active,
+.dashboard-sidebar a:focus,
+.dashboard-sidebar .ui-menuitem-link,
+.dashboard-sidebar .ui-widget,
+.nav-link,
+.nav-link:link,
+.nav-link:visited,
+.nav-link:hover,
+.nav-link:active,
+.nav-link:focus,
+.dashboard-sidebar .ui-link,
+.dashboard-sidebar .ui-commandlink {
+    text-decoration: none !important;
+    border-bottom: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Regra específica para PrimeFaces p:link */
+.dashboard-sidebar .ui-link,
+.dashboard-sidebar .ui-link:hover,
+.dashboard-sidebar .ui-link:focus,
+.dashboard-sidebar .ui-link:active {
+    text-decoration: none !important;
 }
 
 /* ===== SIDEBAR ===== */
@@ -18,6 +69,14 @@
     top: 0;
     height: 100vh;
     overflow-y: auto;
+}
+
+.dashboard-sidebar a,
+.dashboard-sidebar a:hover,
+.dashboard-sidebar a:focus,
+.dashboard-sidebar a:active,
+.dashboard-sidebar a:visited {
+    text-decoration: none !important;
 }
 
 .dashboard-sidebar h2 {
@@ -36,10 +95,17 @@
     margin-bottom: 12px;
     padding: 15px 20px;
     border-radius: 8px;
-    text-decoration: none;
+    text-decoration: none !important;
     transition: all 0.3s ease;
     border: 2px solid transparent;
     position: relative;
+}
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link:active,
+.nav-link:visited {
+    text-decoration: none !important;
 }
 
 .nav-link:hover {
@@ -47,6 +113,7 @@
     transform: translateX(8px);
     border-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none !important;
 }
 
 .nav-link .pi {
@@ -455,7 +522,7 @@
 /* ===== MELHORIAS DE CONTRASTE ===== */
 .stat-card-title {
     color: #333 !important;
-    contrast: high;
+    font-weight: 600;
 }
 
 .stat-card-value {
