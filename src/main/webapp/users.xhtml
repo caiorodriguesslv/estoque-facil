@@ -148,7 +148,7 @@
         <!-- Conteúdo Principal -->
         <main class="dashboard-content" role="main">
             <header class="dashboard-header">
-                <h1>Módulo de Gestão de Usuários</h1>
+                <h1>Cadastro e Consulta de Usuários</h1>
                 <p>Sistema de Controle de Estoque</p>
             </header>
 
@@ -156,55 +156,42 @@
                 <!-- Mensagens de Feedback -->
                 <p:messages id="messages" showDetail="true" autoUpdate="true" />
                 
-                <!-- Formulário de Cadastro/Edição -->
+                <!-- Formulário de Cadastro -->
                 <div class="form-container">
-                    <p:panel header="Cadastro de Usuário" toggleable="true" collapsed="false">
-                <h:panelGrid columns="2" cellpadding="5">
-                    <h:outputLabel for="nome" value="Nome Completo:" />
-                    <p:inputText id="nome" value="#{userBean.user.name}" 
-                                required="true" requiredMessage="Nome é obrigatório"
-                                size="40" maxlength="100">
-                        <f:validateLength minimum="3" maximum="100" />
-                    </p:inputText>
-                    
-                    <h:outputLabel for="email" value="E-mail:" />
-                    <p:inputText id="email" value="#{userBean.user.email}" 
-                                required="true" requiredMessage="E-mail é obrigatório"
-                                size="40" maxlength="100">
-                        <f:validateRegex pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" />
-                    </p:inputText>
-                </h:panelGrid>
-                
-                <p:separator />
-                
-                <div class="button-group" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-                    <p:commandButton value="Salvar" action="#{userBean.save}" 
-                                    update="@form" icon="pi pi-save" 
-                                    styleClass="p-button-success" 
-                                    style="margin-right: 8px;" />
-                    <p:commandButton value="Limpar" action="#{userBean.clear}" 
-                                    update="@form" icon="pi pi-refresh" 
-                                    styleClass="p-button-secondary" 
-                                    style="margin-right: 8px;" />
-                    <p:commandButton value="Cancelar" action="#{userBean.cancel}" 
-                                    update="@form" icon="pi pi-times" 
-                                    styleClass="p-button-danger" />
+                    <p:panel header="➕ Cadastro de Usuário" toggleable="true" collapsed="false">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputLabel for="nome" value="Nome Completo:" />
+                            <p:inputText id="nome" value="#{userBean.user.name}" 
+                                        required="true" requiredMessage="Nome é obrigatório"
+                                        size="40" maxlength="100">
+                                <f:validateLength minimum="3" maximum="100" />
+                            </p:inputText>
+                            
+                            <h:outputLabel for="email" value="E-mail:" />
+                            <p:inputText id="email" value="#{userBean.user.email}" 
+                                        required="true" requiredMessage="E-mail é obrigatório"
+                                        size="40" maxlength="100">
+                                <f:validateRegex pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" />
+                            </p:inputText>
+                        </h:panelGrid>
+                        
+                        <p:separator />
+                        
+                        <div class="button-group" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <p:commandButton value="Salvar" 
+                                            action="#{userBean.save}" 
+                                            update="@form" 
+                                            icon="pi pi-save" 
+                                            styleClass="p-button-success" />
+                            <p:commandButton value="Limpar" 
+                                            action="#{userBean.clear}" 
+                                            update="@form" 
+                                            icon="pi pi-refresh" 
+                                            styleClass="p-button-secondary" />
+                        </div>
+                    </p:panel>
                 </div>
-            </p:panel>
-                </div>
                 
-                <!-- Área de Busca -->
-                <div class="search-container">
-                    <p:panel header="🔍 Buscar Usuário">
-                <h:panelGrid columns="3" cellpadding="5">
-                    <h:outputLabel for="searchEmail" value="Buscar por E-mail:" />
-                    <p:inputText id="searchEmail" value="#{userBean.searchEmail}" 
-                                placeholder="Digite o e-mail..." size="30" />
-                    <p:commandButton value="Buscar" action="#{userBean.search}" 
-                                    update="@form" icon="pi pi-search" />
-                </h:panelGrid>
-            </p:panel>
-                </div>
                 
                 <!-- Tabela de Usuários -->
                 <div class="table-container">
@@ -217,33 +204,15 @@
                             styleClass="p-datatable-sm">
                     
                     
-                    <p:column headerText="Nome" sortBy="#{user.name}" filterBy="#{user.name}" 
-                              filterMatchMode="contains" width="200">
+                    <p:column headerText="Nome" sortBy="#{user.name}" width="200">
                         <h:outputText value="#{user.name}" />
                     </p:column>
                     
-                    <p:column headerText="E-mail" sortBy="#{user.email}" filterBy="#{user.email}" 
-                              filterMatchMode="contains" width="250">
+                    <p:column headerText="E-mail" sortBy="#{user.email}" width="250">
                         <h:outputText value="#{user.email}" />
                     </p:column>
                     
-                    <p:column headerText="Ações" width="120" style="text-align: center;">
-                        <h:panelGroup style="display: flex; gap: 5px; justify-content: center;">
-                            <p:commandButton icon="pi pi-pencil" 
-                                            actionListener="#{userBean.edit(user)}" 
-                                            update=":usuarioForm" 
-                                            styleClass="p-button-sm p-button-info p-button-rounded" 
-                                            title="Editar usuário"
-                                            immediate="true" />
-                            <p:commandButton icon="pi pi-trash" 
-                                            actionListener="#{userBean.delete(user.id)}" 
-                                            update=":usuarioForm" 
-                                            styleClass="p-button-sm p-button-danger p-button-rounded" 
-                                            title="Excluir usuário"
-                                            immediate="true"
-                                            onclick="return confirm('Tem certeza que deseja excluir este usuário?')" />
-                        </h:panelGroup>
-                    </p:column>
+
                 </p:dataTable>
                 </p:panel>
                 </div>

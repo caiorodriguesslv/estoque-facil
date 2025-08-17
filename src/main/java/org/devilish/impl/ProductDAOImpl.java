@@ -117,6 +117,24 @@ public class ProductDAOImpl implements ProductDAO {
     }
     
     @Override
+    public List<Product> findByCodeContaining(String code) {
+        Session session = null;
+        
+        try {
+            session = sessionFactory.openSession();
+            return session.createQuery("FROM Product p WHERE UPPER(p.code) LIKE UPPER(:code)", Product.class)
+                         .setParameter("code", "%" + code + "%")
+                         .list();
+        } catch (Exception e) {
+            throw new DAOException("Erro ao buscar produtos por código parcial", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+    
+    @Override
     public void update(Product product) {
         validateProduct(product);
         

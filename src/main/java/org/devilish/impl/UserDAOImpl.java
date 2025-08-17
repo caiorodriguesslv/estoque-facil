@@ -76,6 +76,31 @@ public class UserDAOImpl implements UserDAO {
     }
     
     @Override
+    public List<User> findByNameContaining(String name) {
+        Session session = null;
+        
+        try {
+            System.out.println("=== INICIANDO BUSCA POR NOME: " + name + " ===");
+            session = sessionFactory.openSession();
+            System.out.println("=== SESSÃO ABERTA ===");
+            List<User> result = session.createQuery("FROM User u WHERE LOWER(u.name) LIKE LOWER(:name)", User.class)
+                                       .setParameter("name", "%" + name + "%")
+                                       .list();
+            System.out.println("=== QUERY EXECUTADA - Resultados: " + (result != null ? result.size() : "null") + " ===");
+            return result;
+        } catch (Exception e) {
+            System.err.println("=== ERRO NA BUSCA POR NOME ===");
+            e.printStackTrace();
+            throw new DAOException("Erro ao buscar usuários por nome", e);
+        } finally {
+            if (session != null) {
+                session.close();
+                System.out.println("=== SESSÃO FECHADA ===");
+            }
+        }
+    }
+
+    @Override
     public List<User> findAll() {
         Session session = null;
         

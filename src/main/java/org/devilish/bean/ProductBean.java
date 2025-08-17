@@ -88,20 +88,44 @@ public class ProductBean {
     }
     
     public void search() {
-        if (searchCode != null && !searchCode.trim().isEmpty()) {
-            try {
-                Product foundProduct = productDAO.findByCode(searchCode);
+        try {
+            if (searchCode != null && !searchCode.trim().isEmpty()) {
+                System.out.println("=== BUSCANDO PRODUTO COM CÓDIGO: " + searchCode + " ===");
+                
+                // Primeiro tenta busca exata
+                Product foundProduct = productDAO.findByCode(searchCode.trim());
                 if (foundProduct != null) {
                     products = java.util.Arrays.asList(foundProduct);
+                    addMessage("Produto encontrado!", FacesMessage.SEVERITY_INFO);
+                    System.out.println("=== PRODUTO ENCONTRADO: " + foundProduct.getCode() + " ===");
                 } else {
-                    addMessage("Produto não encontrado", FacesMessage.SEVERITY_WARN);
-                    loadProducts();
+                    // Se não encontrou com busca exata, tenta busca parcial
+                    List<Product> partialResults = productDAO.findByCodeContaining(searchCode.trim());
+                    if (partialResults != null && !partialResults.isEmpty()) {
+                        products = partialResults;
+                        addMessage("Encontrados " + partialResults.size() + " produto(s) com código similar", FacesMessage.SEVERITY_INFO);
+                        System.out.println("=== BUSCA PARCIAL - ENCONTRADOS: " + partialResults.size() + " ===");
+                    } else {
+                        addMessage("Nenhum produto encontrado com o código '" + searchCode + "'", FacesMessage.SEVERITY_WARN);
+                        System.out.println("=== NENHUM PRODUTO ENCONTRADO ===");
+                        loadProducts(); // Recarrega todos os produtos
+                    }
                 }
-            } catch (DAOException e) {
-                addMessage("Erro na busca: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
+            } else {
+                System.out.println("=== CARREGANDO TODOS OS PRODUTOS ===");
+                loadProducts(); // Se campo vazio, mostra todos
             }
-        } else {
-            loadProducts();
+            loadExpiredProducts(); // Sempre recarrega produtos vencidos
+        } catch (DAOException e) {
+            System.err.println("=== ERRO DAO NA BUSCA: " + e.getMessage() + " ===");
+            e.printStackTrace();
+            addMessage("Erro na busca: " + e.getMessage(), FacesMessage.SEVERITY_ERROR);
+            loadProducts(); // Em caso de erro, recarrega todos
+        } catch (Exception e) {
+            System.err.println("=== ERRO GERAL NA BUSCA: " + e.getMessage() + " ===");
+            e.printStackTrace();
+            addMessage("Erro inesperado na busca", FacesMessage.SEVERITY_ERROR);
+            loadProducts(); // Em caso de erro, recarrega todos
         }
     }
     
@@ -151,6 +175,18 @@ public class ProductBean {
     public void cancel() {
         product = new Product();
         searchCode = null;
+    }
+    
+    public void clearSearch() {
+        searchCode = null;
+        loadProducts(); // Recarrega todos os produtos
+        addMessage("Busca limpa. Exibindo todos os produtos.", FacesMessage.SEVERITY_INFO);
+    }
+    
+    public void onSearchKeyUp() {
+        // Método para capturar eventos de teclado
+        // Pode ser usado para implementar busca em tempo real no futuro
+        System.out.println("=== CAMPO DE BUSCA ALTERADO: " + searchCode + " ===");
     }
     
     // Getters e Setters

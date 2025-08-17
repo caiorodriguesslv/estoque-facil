@@ -11,6 +11,7 @@ public interface ProductDAO {
     List<Product> findAll();
     List<Product> findByExpiryDate(LocalDate date);
     List<Product> findExpiredProducts();
+    List<Product> findByCodeContaining(String code);
     void update(Product product);
     void delete(String code);
     boolean existsByCode(String code);

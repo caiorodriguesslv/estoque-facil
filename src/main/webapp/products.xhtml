@@ -212,18 +212,6 @@
                 </p:panel>
                 </div>
                 
-                <div class="search-container">
-                    <p:panel header="🔍 Buscar Produto">
-                        <h:panelGrid columns="3" cellpadding="5">
-                        <h:outputLabel for="searchCode" value="Buscar por Código:" />
-                        <p:inputText id="searchCode" value="#{productBean.searchCode}" 
-                                    placeholder="Digite o código..." size="30" />
-                        <p:commandButton value="Buscar" action="#{productBean.search}" 
-                                        update="@form" icon="pi pi-search" />
-                    </h:panelGrid>
-                </p:panel>
-                </div>
-                
                 <div class="table-container">
                     <p:panel header="📦 Lista de Produtos">
                     <p:dataTable id="produtosTable" value="#{productBean.products}" var="product" 
@@ -233,19 +221,17 @@
                                 emptyMessage="Nenhum produto encontrado"
                                 styleClass="p-datatable-sm">
                         
-                        <p:column headerText="Código" sortBy="#{product.code}" filterBy="#{product.code}" 
-                                  filterMatchMode="contains" width="100">
+                        <p:column headerText="Código" sortBy="#{product.code}" width="100">
                             <h:outputText value="#{product.code}" />
                         </p:column>
                         
-                        <p:column headerText="Descrição" sortBy="#{product.description}" filterBy="#{product.description}" 
-                                  filterMatchMode="contains" width="200">
+                        <p:column headerText="Descrição" sortBy="#{product.description}" width="200">
                             <h:outputText value="#{product.description}" />
                         </p:column>
                         
                         <p:column headerText="Quantidade" sortBy="#{product.quantity}" width="100">
                             <h:outputText value="#{product.quantity}">
-                                <f:convertNumber pattern="#,##0.00" />
+                                <f:convertNumber pattern="#" />
                             </h:outputText>
                         </p:column>
                         
